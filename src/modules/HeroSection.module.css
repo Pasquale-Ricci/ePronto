@@ -1,0 +1,48 @@
+.heroSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../assets/backgroundLP.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 10px;
+    margin-top: 50px;
+    min-height: 100vh;
+}
+
+.heroImage {
+    opacity: 0.7;
+    margin: 100px;
+    margin-bottom: 10px;
+    border-radius: 100px;
+}
+
+.signInBtn {
+    border: 1px solid black;
+    color: white;
+    padding: 15px;
+    margin: 5px;
+    border-radius: 5px;
+    background-color: hsl(0, 41%, 48%);
+}
+
+.signInBtn:hover {
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: hsl(0, 76%, 18%);
+}
+
+.loginBtn {
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 5px;
+    background-color: hsl(0, 5%, 92%);
+}
+
+.loginBtn:hover {
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: hsl(0, 1%, 72%);
+}

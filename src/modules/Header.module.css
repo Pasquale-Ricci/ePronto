@@ -1,0 +1,27 @@
+.header {
+    box-shadow: 0 15px 8px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    background-color: hsl(0, 0%, 46%);
+    padding: 10px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.headerBtn {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background: none;
+    transition: background-color 0.3s ease;
+}
+
+.headerBtn:hover {
+    cursor: pointer;
+    background-color: hsl(0, 90%, 35%);
+}
