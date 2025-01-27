@@ -1,19 +1,13 @@
-import syles from '../modules/Header.module.css';
+import styles from '../modules/Header.module.css';
 import logo from '../assets/iconaWeb.png';
 
-function Header () {
-
-    return (
-        <header className={syles.header}>
-        <img src = {logo} alt="logo"/>
-        <span>
-            <button className= {syles.headerBtn} > Prodotti </button>
-            <button className= {syles.headerBtn}> Community </button>
-            <button className= {syles.headerBtn}> Novità </button>
-        </span>
+function Header() {
+  return (
+    <header className={styles.header}>
+      <img className={styles.logo} src={logo} alt="logo" />
+      <h2>èPronto</h2>
     </header>
-    );
-
+  );
 }
 
 export default Header;
