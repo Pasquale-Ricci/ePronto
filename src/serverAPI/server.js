@@ -1,4 +1,4 @@
-// Importa le dipendenze
+
 import express from 'express';
 import cors from 'cors';
 import pkg from 'pg';
@@ -6,18 +6,11 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import bodyParser from 'body-parser';
 
-const { Client } = pkg;
-
-// Crea l'app Express
+const { Client } = pkg
 const app = express();
-
-// Usa il middleware CORS
 app.use(cors());
-
-// Middleware per il body parsing (JSON)
 app.use(bodyParser.json());
 
-// Configura il database PostgreSQL
 const client = new Client({
     host: 'pg.rapidapp.io',
     port: 5433,
