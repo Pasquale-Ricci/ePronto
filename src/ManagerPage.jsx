@@ -23,7 +23,7 @@ function ManagerPage() {
                 <div className={style.sectionsContainer}>
 
                     <div className={style.sectionColumn}>
-                        <MenuSection></MenuSection>
+                      <MenuSection></MenuSection>
                         <div>
                             <h2>Accedi ai tuoi reports</h2>
                             <button onClick={changeView}>Reports</button>
