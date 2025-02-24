@@ -36,7 +36,7 @@ function MenuSection() {
     }, []);
 
     // Ordina i piatti per tipo_piatto
-    const sortedMenu = [...menu].sort((a, b) => a.tipo_piatto.localeCompare(b.tipo_piatto));
+    const sortedMenu = [...menu].sort((a, b) => a.Tipo_piatto.localeCompare(b.Tipo_piatto));
 
     // Crea un array di elementi JSX
     const menuItems = [];
@@ -44,11 +44,11 @@ function MenuSection() {
 
     for (let i = 0; i < sortedMenu.length; i++) {
         const piatto = sortedMenu[i];
-        if (piatto.tipo_piatto !== currentTipoPiatto) {
-            currentTipoPiatto = piatto.tipo_piatto;
+        if (piatto.Tipo_piatto !== currentTipoPiatto) {
+            currentTipoPiatto = piatto.Tipo_piatto;
             menuItems.push(<h2 key={`header-${currentTipoPiatto}`}>{currentTipoPiatto}</h2>);
         }
-        menuItems.push(<li key={i}>{piatto.nome}</li>);
+        menuItems.push(<li key={i}>{piatto.Nome}</li>);
     }
 
     return (

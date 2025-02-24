@@ -1,8 +1,8 @@
-import styles from '../modules/Footer.module.css'
-import icon from '../assets/iconaWeb.png'
-import twitterLogo from '../assets/twitter.png'
-import instagramLogo from '../assets/instagram.png'
-import youtubeLogo from '../assets/youtube.png'
+import styles from '../../modules/Footer.module.css'
+import icon from '../../assets/iconaWeb.png'
+import twitterLogo from '../../assets/twitter.png'
+import instagramLogo from '../../assets/instagram.png'
+import youtubeLogo from '../../assets/youtube.png'
 
 function Footer() {
     return (

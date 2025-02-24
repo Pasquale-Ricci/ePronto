@@ -1,10 +1,10 @@
-import Header from './components/Header.jsx';
-import HeroSection from './components/HeroSection.jsx';
+import Header from './components/LandingPage/Header.jsx';
+import HeroSection from './components/LandingPage/HeroSection.jsx';
 import feature1 from './assets/PiattoFeature2.jpg';
 import feature2 from './assets/HamburgerFeature1.jpg';
 import feature3 from './assets/CucinaFeature3.jpg';
-import FeatureSection from './components/FeatureSection.jsx';
-import Footer from './components/Footer.jsx';
+import FeatureSection from './components/LandingPage/FeatureSection.jsx';
+import Footer from './components/LandingPage/Footer.jsx';
 
 function App() {
   return (

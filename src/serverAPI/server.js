@@ -35,7 +35,7 @@ app.post('/register', async (req, res) => {
 
     try {
         // Controlla se l'utente esiste già
-        const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+        const result = await client.query('SELECT * FROM Users WHERE email = $1', [email]);
         if (result.rows.length > 0) {
             return res.status(400).json({ error: 'User already exists' });
         }
@@ -45,7 +45,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Inserisci il nuovo utente nel database
-        await client.query('INSERT INTO users (email, password_hash, ruolo) VALUES ($1, $2, $3) RETURNING id, email, ruolo ', [email, hashedPassword, ruolo]);
+        await client.query('INSERT INTO Users (Email, Password_hash, Ruolo) VALUES ($1, $2, $3) RETURNING ID, Email, Ruolo ', [email, hashedPassword, ruolo]);
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
@@ -80,15 +80,15 @@ app.post('/alerts', async (req, res) => {
     try {
         // Alerts sul beverage
         const beverage = await client.query(
-            'SELECT "Nome" FROM "Beverage" WHERE "Quantità" <= "Quantità_critica";'
+            'SELECT "Nome" FROM "Beverage" WHERE "Quantita" <= "Quantita_critica";'
         );
         
         // Alerts sul tempo di attesa
         //Conversione del datatype Interval in tempo attesa in minuti per poter essere 
         //filtrato successivamente
         const ordini = await client.query(
-            `SELECT "Cod_ordine", "Totale", "NoteOrdine", "Cod_tavolo", "ora", 
-            EXTRACT(EPOCH FROM (NOW() - "ora")) / 60 AS "tempo_attesa_minuti" 
+            `SELECT "Cod_ordine", "Totale", "Note_ordine", "Cod_tavolo", "Ora", 
+            EXTRACT(EPOCH FROM (NOW() - "Ora")) / 60 AS "tempo_attesa_minuti" 
             FROM "Ordine";`
         );
 
@@ -110,7 +110,46 @@ app.post('/alerts', async (req, res) => {
 app.post('/staff', async (req, res) => {
     try {
         const staff = await client.query(
-            `SELECT * FROM "users" WHERE "ruolo" = 'dipendente' AND "Cod_ristorante" = 1`
+            `SELECT * FROM "Users" WHERE "Ruolo" = 'dipendente' AND "Cod_ristorante" = 1`
+        );
+        res.json(staff.rows);
+    }
+    
+    catch(error){
+        console.log(error);
+        
+    }
+})
+
+//Aggiungere dipendente
+app.post('/addStaff', async (req, res) => {
+    const { cod_dipendente } = req.body;
+    const { cod_ristorante } = req.body;
+    try {
+        const staff = await client.query(
+            `UPDATE "Users"
+            SET "Cod_ristorante" = 1
+            WHERE "ID" = $1 RETURNING *`, [cod_dipendente]
+        );
+        res.json(staff.rows);
+    }
+    
+    catch(error){
+        console.log(error);
+        
+    }
+})
+
+//Rimuovere dipendente
+app.post('/removeStaff', async (req, res) => {
+    const { ID } = req.body;
+
+
+    try {
+        const staff = await client.query(
+            `UPDATE "Users"
+            SET "Cod_ristorante" = NULL
+            WHERE "ID" = $1 RETURNING *`, [ID]
         );
         res.json(staff.rows);
     }
@@ -125,7 +164,7 @@ app.post('/staff', async (req, res) => {
 app.post('/menu', async (req, res) => {
     try {
         const menu = await client.query(
-            'SELECT * FROM menu WHERE cod_ristorante = 1 AND disponibile = true'
+            'SELECT * FROM "Menu" WHERE "Cod_ristorante" = 1 AND "Disponibile" = true'
         );
         res.json(menu.rows); 
     } catch (error) {
@@ -134,7 +173,19 @@ app.post('/menu', async (req, res) => {
     }
 })
 
+// Rotta per il report del beverage
+app.post('/beverageReport', async (req, res) => {
+    try {
+        const beverageReport = await client.query(
+            'SELECT "Nome", "Quantita", "Quantita_max", "Quantita_critica" FROM "Beverage";'
+        );
+        res.json(beverageReport.rows);
 
+    } catch (error) {
+        console.error('Error fetching beverage report:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Avvia il server
 const PORT = process.env.PORT || 3000;

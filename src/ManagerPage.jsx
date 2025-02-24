@@ -1,4 +1,4 @@
-import Header from "./components/Header"
+import Header from "./components/LandingPage/Header"
 import style from './modules/ManagerPage.module.css'
 import AlertSection from './components/ManagerPage/AlertSection'
 import StaffSection from './components/ManagerPage/StaffSection'

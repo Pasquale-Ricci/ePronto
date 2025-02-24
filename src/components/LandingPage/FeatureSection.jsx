@@ -1,4 +1,4 @@
-import styles from '../modules/FeatureSection.module.css'
+import styles from '../../modules/FeatureSection.module.css'
 
 function FeatureSection (props) {
     return (

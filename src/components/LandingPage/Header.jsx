@@ -1,5 +1,5 @@
-import styles from '../modules/Header.module.css';
-import logo from '../assets/iconaWeb.png';
+import styles from '../../modules/Header.module.css';
+import logo from '../../assets/iconaWeb.png';
 
 function Header() {
   return (

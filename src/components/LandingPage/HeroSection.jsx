@@ -1,5 +1,5 @@
-import styles from '../modules/HeroSection.module.css';
-import logo from '../assets/logoWeb.png';
+import styles from '../../modules/HeroSection.module.css';
+import logo from '../../assets/logoWeb.png';
 import { useState, useRef } from 'react';
 
 function HeroSection() {
