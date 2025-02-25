@@ -9,11 +9,11 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointEleme
 
 function GraphReport() {
     const [beverageData, setBeverageData] = useState([]);
-    const [isBarChart, setIsBarChart] = useState(true); // Stato per il tipo di grafico selezionato
+    const [orderData, setOrderData] = useState([]);
+    const [isBarChart, setIsBarChart] = useState(true);
 
     useEffect(() => {
-        // Simula una chiamata API per ottenere i dati del beverage
-        const fetchData = async () => {
+        const fetchBeverageData = async () => {
             try {
                 const response = await fetch('http://localhost:3000/beverageReport', {
                     method: 'POST'
@@ -28,10 +28,26 @@ function GraphReport() {
             }
         };
 
-        fetchData();
+        const fetchOrderData = async () => {
+            try {
+                const response = await fetch('http://localhost:3000/orderReport', {
+                    method: 'POST'
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                setOrderData(data);
+            } catch (error) {
+                console.error('Error fetching order report:', error);
+            }
+        };
+
+        fetchBeverageData();
+        fetchOrderData();
     }, []);
 
-    // Configura i dati per il grafico a barre
+    //Grafico a barre
     const barData = {
         labels: beverageData.map(item => item.Nome),
         datasets: [
@@ -59,30 +75,21 @@ function GraphReport() {
         ],
     };
 
-    // Configura i dati per il grafico a linee
+    //Grafico a linee
     const lineData = {
-        labels: beverageData.map(item => item.Nome),
+        labels: orderData.map(item => {
+            const currentDate = new Date().toISOString().split('T')[0];
+            const dateTimeString = `${currentDate}T${item.Ora}`;
+            const date = new Date(dateTimeString);
+            return date instanceof Date && !isNaN(date) ? date.toLocaleTimeString() : 'Invalid Date';
+        }),
         datasets: [
             {
-                label: 'Quantità',
-                data: beverageData.map(item => item.Quantita),
+                label: 'Numero di Ordini',
+                data: orderData.map((item, index, array) => array.slice(0, index + 1).length), // Conta il numero di ordini fino a quel punto
                 fill: false,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-            },
-            {
-                label: 'Quantità Critica',
-                data: beverageData.map(item => item.Quantita_critica),
-                fill: false,
-                backgroundColor: 'rgba(255, 206, 86, 0.2)',
-                borderColor: 'rgba(255, 206, 86, 1)',
-            },
-            {
-                label: 'Quantità Massima',
-                data: beverageData.map(item => item.Quantita_max),
-                fill: false,
-                backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                borderColor: 'rgba(153, 102, 255, 1)',
             },
         ],
     };
@@ -98,9 +105,8 @@ function GraphReport() {
 
     return (
         <div className={styles.sectionsContainer}>
-            <h2>Report Beverage</h2>
+            <h2>Reports</h2>
             <div className={styles.chartContainer}>
-
                 <div className={styles.iconContainer}>
                     <FontAwesomeIcon
                         icon={faChartBar}

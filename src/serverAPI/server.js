@@ -35,7 +35,7 @@ app.post('/register', async (req, res) => {
 
     try {
         // Controlla se l'utente esiste già
-        const result = await client.query('SELECT * FROM Users WHERE email = $1', [email]);
+        const result = await client.query('SELECT * FROM "Users" WHERE "Email" = $1', [email]);
         if (result.rows.length > 0) {
             return res.status(400).json({ error: 'User already exists' });
         }
@@ -45,7 +45,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Inserisci il nuovo utente nel database
-        await client.query('INSERT INTO Users (Email, Password_hash, Ruolo) VALUES ($1, $2, $3) RETURNING ID, Email, Ruolo ', [email, hashedPassword, ruolo]);
+        await client.query('INSERT INTO "Users" ("Email", "Password_hash", "Ruolo") VALUES ($1, $2, $3) RETURNING "ID", "Email", "Ruolo" ', [email, hashedPassword, ruolo]);
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
@@ -59,13 +59,13 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const result = await client.query('SELECT * FROM users WHERE email = $1', [email]);
+        const result = await client.query('SELECT * FROM "Users" WHERE "Email" = $1', [email]);
         const user = result.rows[0];
 
         if (user && await bcrypt.compare(password, user.password_hash)) {
             const token = jwt.sign({ id: user.id, email: user.email, ruolo: user.ruolo }, 'your_jwt_secret', { expiresIn: '1h' });
             res.json({ token });
-            localStorage.setItem({codRistorante : 1}, {ruolo : "proprietario"})
+            localStorage.setItem({Cod_ristorante : 1}, {ruolo : "proprietario"})
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
@@ -74,7 +74,6 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 // Rotta degli alert
 app.post('/alerts', async (req, res) => {
     try {
@@ -172,6 +171,19 @@ app.post('/menu', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 })
+
+// Rotta per il report degli ordini
+app.post('/orderReport', async (req, res) => {
+    try {
+        const orderReport = await client.query(
+            'SELECT "Ora" FROM "Ordine";'
+        );
+        res.json(orderReport.rows);
+    } catch (error) {
+        console.error('Error fetching order report:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Rotta per il report del beverage
 app.post('/beverageReport', async (req, res) => {
