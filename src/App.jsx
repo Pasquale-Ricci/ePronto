@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Header from "./components/LandingPage/Header.jsx";
 import HeroSection from "./components/LandingPage/HeroSection.jsx";
 import FeatureSection from "./components/LandingPage/FeatureSection.jsx";
@@ -6,69 +6,55 @@ import Footer from "./components/LandingPage/Footer.jsx";
 import ManagerPage from "./pages/ManagerPage.jsx";
 import OrderPage from "./pages/OrderPage.jsx";
 import KitchenPage from "./pages/KitchenPage.jsx";
-import OrderSection from "./components/OrderPage/OrderSection.jsx"; // Assicurati che il percorso sia corretto
-import PayementSection from "./components/OrderPage/PaymentSection.jsx"; // Corretto
+import OrderSection from "./components/OrderPage/OrderSection.jsx";
+import PaymentSection from "./components/OrderPage/PaymentSection.jsx";
 import TablesSection from "./components/OrderPage/TablesSection.jsx";
 import feature1 from "./assets/PiattoFeature2.jpg";
-import feature2 from "./assets/HamburgerFeature1.jpg";
-import feature3 from "./assets/CucinaFeature3.jpg";
+import feature2 from "./assets/StaffFeature2.png";
+import feature3 from "./assets/MenuFeature3.png";
 
-function Layout() {
+function App() {
   return (
     <>
-      {/* Route per la landing page */}
+      <Header />
       <Routes>
         <Route
           path="/"
           element={
             <>
-              <Header />
               <HeroSection />
               <div id="featureImgs">
+              <FeatureSection
+               title="Gestione Ristorante"
+                description="èPronto aiuta a organizzare il lavoro nel ristorante, dalla presa delle ordinazioni fino gestione del magazzino. Un supporto pratico per migliorare il servizio."
+                img={feature1}
+/>
                 <FeatureSection
-                  title="Prodotti"
-                  description="L'app èPronto è un software di gestione per il tuo ristorante..."
-                  img={feature1}
-                />
-                <FeatureSection
-                  title="Community"
-                  description="L'app èPronto è un software di gestione per il tuo ristorante..."
+                  title="Strumento per lo Staff"
+                  description="Ogni membro dello staff ha accesso alle informazioni utili per il proprio ruolo: sala, cucina e gestione. Notifiche e aggiornamenti in tempo reale rendono il lavoro più fluido."
                   img={feature2}
                 />
                 <FeatureSection
-                  title="Novità"
-                  description="L'app èPronto è un software di gestione per il tuo ristorante..."
+                  title="Funzionalità Intuitive"
+                  description="Menu digitale con QR code, gestione delle comande e report giornalieri. Un sistema semplice per monitorare ordini, scorte e preferenze dei clienti."
                   img={feature3}
                 />
+
               </div>
               <Footer />
             </>
           }
         />
-
-        {/* Pagine interne */}
         <Route path="/manager" element={<ManagerPage />} />
         <Route path="/kitchenpage" element={<KitchenPage />} />
-
-        {/* Route per la pagina dell'ordine */}
         <Route path="/orderpage" element={<OrderPage />}>
           <Route path="order" element={<OrderSection />} />
-          <Route path="payment" element={<PayementSection />} />
+          <Route path="payment" element={<PaymentSection />} />
           <Route path="tables" element={<TablesSection />} />
         </Route>
-
-        {/* Route 404 */}
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <Layout />
-    </Router>
   );
 }
 

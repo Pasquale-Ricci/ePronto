@@ -14,7 +14,7 @@ function Footer() {
                 <img src = {youtubeLogo} alt = "logo di Youtube" />
                 <p> © 2025 ePronto </p>
                 <h4>Contatti</h4>
-                <pre>Telefono: 1234567890 <br /> Email: epronto@mail.boh</pre>
+                <pre>Telefono: 1234567890 <br />Email: epronto@mail.boh</pre>
             </span>
         </footer>
     )

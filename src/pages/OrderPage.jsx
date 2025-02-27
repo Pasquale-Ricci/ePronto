@@ -5,16 +5,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus, faChair, faCashRegister } from '@fortawesome/free-solid-svg-icons';
 
 import OrderSection from "../components/OrderPage/OrderSection";
-<<<<<<< HEAD
-import PayementSection from "../components/OrderPage/PayementSection";
-=======
-import PaymentSection from "../components/OrderPage/PaymentSection";
->>>>>>> a4e32832d6aac4518dcaaaeeac24af43db3340e2
+import PayementSection from "../components/OrderPage/PaymentSection";
 import TablesSection from "../components/OrderPage/TablesSection";
 
 function OrderPage() {
 
-<<<<<<< HEAD
     const [view, setView] = useState("");
 
     switch (view) {
@@ -51,42 +46,6 @@ function OrderPage() {
                 </>
             )
     }
-=======
-  switch (view) {
-    case "order":
-      return <OrderSection />;
-    case "payment":
-      return <PaymentSection />;
-    case "tables":
-      return <TablesSection />;
-    default:
-      return (
-        <>
-          <Header />
-          <div className={styles.sectionsContainer}>
-            <div className={styles.section}>
-              <h2>Ordina</h2>
-              <button onClick={() => setView("order")}>
-                <FontAwesomeIcon icon={faCartPlus} />
-              </button>
-            </div>
-            <div className={styles.section}>
-              <h2>Paga</h2>
-              <button onClick={() => setView("payment")}>
-                <FontAwesomeIcon icon={faCashRegister} />
-              </button>
-            </div>
-            <div className={styles.section}>
-              <h2>Visualizza i tavoli</h2>
-              <button onClick={() => setView("tables")}>
-                <FontAwesomeIcon icon={faChair} />
-              </button>
-            </div>
-          </div>
-        </>
-      );
-  }
->>>>>>> a4e32832d6aac4518dcaaaeeac24af43db3340e2
 }
 
 export default OrderPage;

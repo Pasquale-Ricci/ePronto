@@ -11,23 +11,21 @@ function OrderSection() {
   const [order, setOrder] = useState({});
   const [notes, setNotes] = useState("");
 
-
-    // Funzione per visualizzare i tavoli disponibili
-    async function getTables() {
-        try {
-            const response = await fetch('http://localhost:3000/tables', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            setTables(await response.json());
-        } catch (error) {
-            console.error('Error fetching tables:', error);
+  // Funzione per visualizzare i tavoli disponibili
+  async function getTables() {
+    try {
+      const response = await fetch('http://localhost:3000/tables', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
         }
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setTables(await response.json());
+    } catch (error) {
+      console.error('Error fetching tables:', error);
     }
   }
 
@@ -247,5 +245,6 @@ function OrderSection() {
       </>
     );
   }
+}
 
 export default OrderSection;

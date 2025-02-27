@@ -196,8 +196,8 @@ function HeroSection() {
             required
           />
           <div className={styles.formButtons}>
-            <button type="submit">Accedi</button>
-            <button type="button" onClick={updateLoginForm}>
+            <button className={styles.signInBtn} type="submit">Accedi</button>
+            <button className={styles.rewindBtn} type="button" onClick={updateLoginForm}>
               Indietro
             </button>
           </div>
@@ -232,15 +232,16 @@ function HeroSection() {
             required
           />
           <select
+            className={styles.selectRole}
             value={role}
             onChange={(e) => setRole(e.target.value)}
             required
           >
-            <option value="">Seleziona il ruolo</option>
-            <option value="Chef">Chef</option>
-            <option value="Cameriere">Cameriere</option>
-            <option value="proprietario">Proprietario</option>
-          </select>
+            <option className={styles.role} value="">Seleziona il ruolo</option>
+            <option className={styles.role} value="Chef">Chef</option>
+            <option className={styles.role} value="Cameriere">Cameriere</option>
+            <option className={styles.role} value="proprietario">Proprietario</option>
+          </select >
           <div className={styles.formButtons}>
             <button className={styles.signInBtn} type="submit">
               Registrati
@@ -257,8 +258,8 @@ function HeroSection() {
   return (
     <div className={styles.heroSection}>
       <img className={styles.heroImage} src={logo} alt="logo" />
-      <button onClick={updateLoginForm}>Accedi</button>
-      <button onClick={updateSignInForm}>Registrati</button>
+      <button className={styles.loginBtn} onClick={updateLoginForm}>Accedi</button>
+      <button className={styles.signInBtn} onClick={updateSignInForm}>Registrati</button>
     </div>
   );
 }

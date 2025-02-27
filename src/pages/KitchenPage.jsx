@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStickyNote, faClock, faChair, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import styles from '../modules/KitchenPage.module.css';
 import Header from '../components/LandingPage/Header';
 
@@ -100,11 +102,10 @@ function KitchenPage() {
                                 key={order.Cod_ordine}
                                 className={`${styles.orderItem} ${order.Cod_ordine === selectedOrder ? styles.selectedOrder : ''}`}
                             >
-                                <div>
-                                    <p>Ordine #{order.Cod_ordine}</p>
-                                    <p>Note: {order.Note_ordine}</p>
-                                    <p>Tavolo: {order.Cod_tavolo}</p>
-                                    <p>Ora: {new Date(order.Ora).toLocaleTimeString()}</p>
+                                <div className={styles.orderDetails}>
+                                    <p><FontAwesomeIcon icon={faStickyNote} /> {order.Note_ordine}</p>
+                                    <p><FontAwesomeIcon icon={faChair} /> {order.Cod_tavolo}</p>
+                                    <p><FontAwesomeIcon icon={faClock} /> {new Date(order.Ora).toLocaleTimeString()}</p>
                                     <ul>
                                         {order.dishes.map((dish) => (
                                             <li key={dish.Cod_menu} className={styles.dishItem}>
@@ -116,7 +117,7 @@ function KitchenPage() {
                                                     className={`${styles.dishBtn} ${dish.Pronto ? styles.dishBtnCompleted : ''}`}
                                                     onClick={() => toggleDishCompletion(order.Cod_ordine, dish.Cod_menu, !dish.Pronto)}
                                                 >
-                                                    {dish.Pronto ? 'Completato' : 'Completa'}
+                                                    {dish.Pronto ? 'Completato' : <FontAwesomeIcon icon={faCircleCheck} />}
                                                 </button>
                                             </li>
                                         ))}
@@ -129,16 +130,16 @@ function KitchenPage() {
                     <div className={styles.completedOrders}>
                         {completedOrders.map(order => (
                             <div key={order.Cod_ordine} className={styles.completedOrderItem}>
-                                <div>
-                                    <p>Ordine #{order.Cod_ordine}</p>
-                                    <p>Note: {order.Note_ordine}</p>
-                                    <p>Tavolo: {order.Cod_tavolo}</p>
-                                    <p>Ora: {new Date(order.Ora).toLocaleTimeString()}</p>
+                                <div className={styles.orderDetails}>
+                                    <p className={styles.orderNumber}>Ordine #{order.Cod_ordine}</p>
+                                    <p><FontAwesomeIcon icon={faStickyNote} /> {order.Note_ordine}</p>
+                                    <p><FontAwesomeIcon icon={faChair} /> {order.Cod_tavolo}</p>
+                                    <p><FontAwesomeIcon icon={faClock} /> {new Date(order.Ora).toLocaleTimeString()}</p>
                                     <ul>
                                         {order.dishes.map((dish) => (
                                             <li key={dish.Cod_menu} className={styles.dishItem}>
                                                 <div>
-                                                    <p>Piatto: {dish.Nome}</p>
+                                                    <p>{dish.Nome}</p>
                                                     <p>Quantità: {dish.Quantita}</p>
                                                 </div>
                                             </li>

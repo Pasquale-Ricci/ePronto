@@ -34,7 +34,7 @@ function Header() {
       {isLoggedIn ? (
         // Header per utenti loggati
         <div className={styles.headerLoggedIn}>
-          <button onClick={handleLogout}>Logout</button>
+          <button className={styles.logoutBtn} onClick={handleLogout}>Logout</button>
         </div>
       ) : (
         // Header per utenti non loggati

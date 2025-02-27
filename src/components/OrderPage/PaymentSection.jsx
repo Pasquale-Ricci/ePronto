@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../LandingPage/Header";
-import styles from "../../modules/PaymentSection.module.css"; // Corretto il nome del file
-import OrderPage from "../../pages/OrderPage"; // Corretto il percorso
+import styles from "../../modules/PaymentSection.module.css"; 
+import OrderPage from "../../pages/OrderPage"; 
 function PaymentSection() {
   const [tables, setTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
