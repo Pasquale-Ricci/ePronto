@@ -1,10 +1,6 @@
 import Header from "../LandingPage/Header";
 import { useState, useEffect } from "react";
-<<<<<<< HEAD
 import styles from '../../modules/TablesSection.module.css';
-=======
-import styles from "../../modules/TablesSection.module.css";
->>>>>>> a4e32832d6aac4518dcaaaeeac24af43db3340e2
 import OrderPage from "../../pages/OrderPage";
 
 function TablesSection() {
@@ -55,7 +51,6 @@ function TablesSection() {
     }
   }
 
-<<<<<<< HEAD
     // Funzione per mettere a sedere i clienti
     async function seatCustomers(tableId) {
         try {
@@ -66,12 +61,10 @@ function TablesSection() {
                 },
                 body: JSON.stringify({ tableId: tableId })
             });
-=======
-  useEffect(() => {
-    getTables();
-  }, []);
->>>>>>> a4e32832d6aac4518dcaaaeeac24af43db3340e2
-
+          } catch (error) {
+            console.error('Error seating customers:', error);
+          }
+        }
   if (!view) {
     return <OrderPage />;
   }
@@ -103,5 +96,4 @@ function TablesSection() {
     </>
   );
 }
-
 export default TablesSection;

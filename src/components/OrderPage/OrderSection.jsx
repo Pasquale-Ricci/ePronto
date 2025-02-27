@@ -1,11 +1,7 @@
 import Header from "../LandingPage/Header";
 import { useEffect, useState } from "react";
 import OrderPage from "../../pages/OrderPage";
-<<<<<<< HEAD
 import styles from '../../modules/OrderSection.module.css';
-=======
-import styles from "../../modules/OrderSection.module.css";
->>>>>>> a4e32832d6aac4518dcaaaeeac24af43db3340e2
 
 function OrderSection() {
   const [view, setView] = useState(true);
@@ -15,13 +11,6 @@ function OrderSection() {
   const [order, setOrder] = useState({});
   const [notes, setNotes] = useState("");
 
-<<<<<<< HEAD
-    const [view, setView] = useState(true);
-    const [tables, setTables] = useState([]);
-    const [selectedTable, setSelectedTable] = useState(0);
-    const [menu, setMenu] = useState([]);
-    const [order, setOrder] = useState({});
-    const [notes, setNotes] = useState('');
 
     // Funzione per visualizzare i tavoli disponibili
     async function getTables() {
@@ -39,23 +28,6 @@ function OrderSection() {
         } catch (error) {
             console.error('Error fetching tables:', error);
         }
-=======
-  // Funzione per visualizzare i tavoli disponibili
-  async function getTables() {
-    try {
-      const response = await fetch("http://localhost:3000/tables", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      setTables(await response.json());
-    } catch (error) {
-      console.error("Error fetching tables:", error);
->>>>>>> a4e32832d6aac4518dcaaaeeac24af43db3340e2
     }
   }
 
@@ -275,6 +247,5 @@ function OrderSection() {
       </>
     );
   }
-}
 
 export default OrderSection;

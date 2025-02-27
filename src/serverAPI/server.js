@@ -292,7 +292,6 @@ app.get('/completed_orders', async (req, res) => {
     try {
         const completedOrders = await client.query(
             'SELECT * FROM "Ordine" WHERE "Completato" = true AND "Pagato" = false'
-            'SELECT * FROM "Ordine" WHERE "Completato" = true AND "Pagato" = false'
         );
         res.json(completedOrders.rows);
     } catch (error) {
