@@ -1,7 +1,6 @@
-import OrderPage from "../../OrderPage";
 import Header from "../LandingPage/Header";
 import { useEffect, useState } from "react";
-import styles from '../../modules/OrderSection.module.css';
+import OrderPage from "../../pages/OrderPage";
 
 function OrderSection() {
 
