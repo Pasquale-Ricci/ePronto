@@ -92,6 +92,8 @@ app.post('/login', async (req, res) => {
 
 
 
+
+
 // Rotta per la registrazione del ristorante
 app.post('/register-restaurant', async (req, res) => {
     const { nome, email, citta, indirizzo} = req.body;
@@ -289,11 +291,97 @@ app.get('/completed_orders', async (req, res) => {
 
     try {
         const completedOrders = await client.query(
-            'SELECT * FROM "Ordine" WHERE "Completato" = true'
+            'SELECT * FROM "Ordine" WHERE "Completato" = true AND "Pagato" = false'
         );
         res.json(completedOrders.rows);
     } catch (error) {
         console.error('Error fetching completed orders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/seat_customers', async (req, res) => {
+    const { tableId } = req.body;
+
+    try {
+        await client.query(
+            'UPDATE "Tavolo" SET "Disponibile" = false WHERE "Cod_tavolo" = $1',
+            [tableId]
+        );
+
+        res.json({ message: 'Customers seated successfully' });
+    } catch (error) {
+        console.error('Error seating customers:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per completare il pagamento di un ordine
+app.post('/complete_payment', async (req, res) => {
+    const { orderId } = req.body;
+
+    try {
+        const result = await client.query(
+            'UPDATE "Ordine" SET "Pagato" = true WHERE "Cod_ordine" = $1 RETURNING *',
+            [orderId]
+        );
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error completing payment:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post ('/free_table', async (req, res) => {
+    const { tableId } = req.body;
+
+    try {
+        await client.query(
+            'UPDATE "Tavolo" SET "Disponibile" = true WHERE "Cod_tavolo" = $1',
+            [tableId]
+        );
+
+        res.json({ message: 'Table freed successfully' });
+    } catch (error) {
+        console.error('Error freeing table:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per ottenere gli ordini con i piatti associati
+app.get('/kitchen_orders', async (req, res) => {
+    try {
+        const orders = await client.query(`
+            SELECT o."Cod_ordine", o."Totale", o."Note_ordine", o."Cod_tavolo", o."Ora", o."Completato", o."Pagato",
+                   mo."Cod_menu", mo."Quantita", m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"
+            FROM "Ordine" o
+            JOIN "Menu_ordine" mo ON o."Cod_ordine" = mo."Cod_ordine"
+            JOIN "Menu" m ON mo."Cod_menu" = m."Cod_menu"
+            WHERE o."Completato" = false
+            ORDER BY o."Ora" ASC
+        `);
+        res.json(orders.rows);
+    } catch (error) {
+        console.error('Error fetching kitchen orders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+// Rotta per marcare un piatto come completato
+app.post('/complete_dish', async (req, res) => {
+    const { orderId, menuId } = req.body;
+
+    try {
+        await client.query(
+            'UPDATE "Menu_ordine" SET "Pronto" = true WHERE "Cod_ordine" = $1 AND "Cod_menu" = $2',
+            [orderId, menuId]
+        );
+
+        res.json({ message: 'Dish marked as completed successfully' });
+    } catch (error) {
+        console.error('Error marking dish as completed:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

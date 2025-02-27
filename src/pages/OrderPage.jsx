@@ -9,6 +9,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import OrderSection from "../components/OrderPage/OrderSection";
+import PaymentSection from "../components/OrderPage/PaymentSection";
+import TablesSection from "../components/OrderPage/TablesSection";
 
 function OrderPage() {
   const [view, setView] = useState("");
@@ -17,9 +19,9 @@ function OrderPage() {
     case "order":
       return <OrderSection />;
     case "payment":
-      return <></>;
+      return <PaymentSection />;
     case "tables":
-      return <></>;
+      return <TablesSection />;
     default:
       return (
         <>
@@ -34,13 +36,13 @@ function OrderPage() {
             <div className={styles.section}>
               <h2>Paga</h2>
               <button onClick={() => setView("payment")}>
-                <FontAwesomeIcon icon={faChair} />
+                <FontAwesomeIcon icon={faCashRegister} />
               </button>
             </div>
             <div className={styles.section}>
               <h2>Visualizza i tavoli</h2>
               <button onClick={() => setView("tables")}>
-                <FontAwesomeIcon icon={faCashRegister} />
+                <FontAwesomeIcon icon={faChair} />
               </button>
             </div>
           </div>

@@ -1,0 +1,47 @@
+.container {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+}
+
+.ordersContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.orderItem {
+    background-color: hsl(0, 57%, 61%);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 300px; /* Imposta una larghezza fissa per ogni ordine */
+    display: flex;
+    flex-direction: column;
+}
+
+.dishItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+}
+
+.dishButton {
+    width: auto;
+    height: auto;
+    font-size: 16px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.dishButton:hover {
+    background-color: #e0e0e0;
+}
