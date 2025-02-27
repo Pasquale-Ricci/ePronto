@@ -7,11 +7,14 @@ function HeroSection() {
   const [loginBtn, setLoginBtn] = useState(false);
   const [signInBtn, setSignInBtn] = useState(false);
   const [firstLogin, setFirstLogin] = useState(false);
+
+  // Stati per gli input
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
   const [restaurantName, setRestaurantName] = useState("");
   const [email, setEmail] = useState("");
   const [indirizzo, setIndirizzo] = useState("");
   const [citta, setCitta] = useState("");
-  const [password, setPassword] = useState("");
   const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -35,56 +38,61 @@ function HeroSection() {
     try {
       const response = await fetch("http://localhost:3000/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
       });
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (data.token) {
         alert("Login effettuato con successo!");
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("ruolo", data.ruolo);
+        window.localStorage.setItem("token", data.token);
+        window.localStorage.setItem("ruolo", data.ruolo);
 
         if (data.firstLogin && data.ruolo === "proprietario") {
           setFirstLogin(true);
         } else {
           localStorage.setItem("cod_ristorante", data.cod_ristorante);
-          navigate("/dipendente");
+          if (data.ruolo === "Cameriere") {
+            navigate("/OrderPage");
+          } else if (data.ruolo === "Chef") {
+            navigate("/kitchenpage");
+          } else if (data.ruolo === "proprietario") {
+            navigate("/manager");
+          }
         }
       } else {
-        alert(data.error || "Errore durante il login.");
+        alert(data.error);
       }
     } catch (error) {
-      console.error("Errore:", error);
+      console.error("Error:", error);
     }
   };
 
   const handleRegisterRestaurant = async (event) => {
     event.preventDefault();
 
-    const ruolo = localStorage.getItem("ruolo");
-    if (ruolo !== "proprietario") {
-      alert("Solo i proprietari possono registrare un ristorante.");
-      return;
-    }
-
     try {
       const response = await fetch(
         "http://localhost:3000/register-restaurant",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             nome: restaurantName,
-            email,
-            citta,
-            indirizzo,
+            email: email,
+            citta: citta,
+            indirizzo: indirizzo,
           }),
         }
       );
 
       const data = await response.json();
+      console.log("Risposta server:", data); // 🔍 Debug
 
       if (response.ok) {
         alert("Ristorante registrato con successo!");
@@ -174,17 +182,17 @@ function HeroSection() {
       <div className={styles.heroSection}>
         <form onSubmit={handleLogin}>
           <input
-            type="email"
+            type="text"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={loginEmail}
+            onChange={(e) => setLoginEmail(e.target.value)}
             required
           />
           <input
             type="password"
             placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={loginPassword}
+            onChange={(e) => setLoginPassword(e.target.value)}
             required
           />
           <div className={styles.formButtons}>
@@ -229,7 +237,8 @@ function HeroSection() {
             required
           >
             <option value="">Seleziona il ruolo</option>
-            <option value="dipendente">Dipendente</option>
+            <option value="Chef">Chef</option>
+            <option value="Cameriere">Cameriere</option>
             <option value="proprietario">Proprietario</option>
           </select>
           <div className={styles.formButtons}>

@@ -92,6 +92,8 @@ app.post('/login', async (req, res) => {
 
 
 
+
+
 // Rotta per la registrazione del ristorante
 app.post('/register-restaurant', async (req, res) => {
     const { nome, email, citta, indirizzo} = req.body;
@@ -289,6 +291,7 @@ app.get('/completed_orders', async (req, res) => {
 
     try {
         const completedOrders = await client.query(
+            'SELECT * FROM "Ordine" WHERE "Completato" = true AND "Pagato" = false'
             'SELECT * FROM "Ordine" WHERE "Completato" = true AND "Pagato" = false'
         );
         res.json(completedOrders.rows);
