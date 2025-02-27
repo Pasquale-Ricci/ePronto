@@ -1,7 +1,7 @@
 import Header from "../LandingPage/Header";
 import { useState, useEffect } from "react";
 import styles from '../../modules/TablesSection.module.css';
-import OrderPage from "../../OrderPage";
+import OrderPage from "../../pages/OrderPage";
 
 function TablesSection() {
     const [view, setView] = useState(true);
@@ -31,11 +31,12 @@ function TablesSection() {
     // Funzione per mettere a sedere i clienti
     async function seatCustomers(tableId) {
         try {
-            const response = await fetch(`http://localhost:3000/seat_customers/${tableId}`, {
+            const response = await fetch('http://localhost:3000/seat_customers', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ tableId: tableId })
             });
 
             if (!response.ok) {

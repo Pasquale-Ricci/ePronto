@@ -1,6 +1,7 @@
 import Header from "../LandingPage/Header";
 import { useEffect, useState } from "react";
 import OrderPage from "../../pages/OrderPage";
+import styles from '../../modules/OrderSection.module.css';
 
 function OrderSection() {
 
@@ -15,7 +16,7 @@ function OrderSection() {
     async function getTables() {
         try {
             const response = await fetch('http://localhost:3000/tables', {
-                method: 'POST',
+                method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }

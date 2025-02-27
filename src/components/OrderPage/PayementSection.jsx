@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import Header from '../LandingPage/Header';
 import styles from '../../modules/PayementSection.module.css';
-import OrderPage from '../../OrderPage';
+import OrderPage from '../../pages/OrderPage';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 
 function PayementSection() {
     const [tables, setTables] = useState([]);
@@ -24,7 +26,7 @@ function PayementSection() {
             }
 
             const data = await response.json();
-            setTables(data);
+            setTables(data.sort((a, b) => a.Cod_tavolo - b.Cod_tavolo));
         } catch (error) {
             console.error('Error fetching tables:', error);
         }
@@ -51,6 +53,55 @@ function PayementSection() {
         }
     }
 
+    // Funzione per completare un pagamento
+    async function completePayment(orderId) {
+        try {
+            const response = await fetch('http://localhost:3000/complete_payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderId: orderId })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Aggiorna la lista degli ordini dopo aver completato il pagamento
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.Cod_ordine === orderId
+                        ? { ...order, Pagato: true }
+                        : order
+                )
+            );
+        } catch (error) {
+            console.error('Error completing payment:', error);
+        }
+    }
+
+    // Funzione per rendere di nuovo disponibile il tavolo dopo che sono stati completati tutti i pagamenti
+    async function freeTable(tableId) {
+        try {
+            const response = await fetch('http://localhost:3000/free_table', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ tableId: tableId })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            // Aggiorna la lista dei tavoli dopo aver liberato il tavolo
+            getTables();
+        } catch (error) {
+            console.error('Error freeing table:', error);
+        }
+    }
+
     useEffect(() => {
         getTables();
         getOrders();
@@ -71,14 +122,21 @@ function PayementSection() {
     };
 
     const filteredOrders = selectedTable
-        ? orders.filter((order) => order.Cod_tavolo === selectedTable)
-        : orders;
+        ? orders.filter((order) => order.Cod_tavolo === selectedTable && !order.Pagato)
+        : orders.filter((order) => !order.Pagato);
+
+    useEffect(() => {
+        if (filteredOrders.length === 0 && selectedTable !== null) {
+            freeTable(selectedTable);
+            setSelectedTable(null);
+        }
+    }, [filteredOrders]);
 
     if (!view) {
         return <OrderPage />
     }
-    return (
 
+    return (
         <>
             <Header />
             <button className={styles.backBtn} onClick={() => setView(false)}>Indietro</button>
@@ -101,7 +159,7 @@ function PayementSection() {
                 <div className={styles.ordersContainer}>
                     <h2>Ordini Completati</h2>
                     {filteredOrders.length === 0 ? (
-                        <p>Nessun ordine completato</p>
+                        <p>Nessun ordine completato da pagare</p>
                     ) : (
                         <ul>
                             {filteredOrders.map((order) => (
@@ -114,6 +172,7 @@ function PayementSection() {
                                     <div className={styles.discountButtons}>
                                         <button onClick={() => applyDiscount(order.Cod_ordine, 10)}>Sconto 10%</button>
                                         <button onClick={() => applyDiscount(order.Cod_ordine, 20)}>Sconto 20%</button>
+                                        <button onClick={() => completePayment(order.Cod_ordine)}><FontAwesomeIcon icon={faCircleCheck} /></button>
                                     </div>
                                 </li>
                             ))}

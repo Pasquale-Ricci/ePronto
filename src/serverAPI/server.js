@@ -289,11 +289,116 @@ app.get('/completed_orders', async (req, res) => {
 
     try {
         const completedOrders = await client.query(
-            'SELECT * FROM "Ordine" WHERE "Completato" = true'
+            'SELECT * FROM "Ordine" WHERE "Completato" = true AND "Pagato" = false'
         );
         res.json(completedOrders.rows);
     } catch (error) {
         console.error('Error fetching completed orders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/seat_customers', async (req, res) => {
+    const { tableId } = req.body;
+
+    try {
+        await client.query(
+            'UPDATE "Tavolo" SET "Disponibile" = false WHERE "Cod_tavolo" = $1',
+            [tableId]
+        );
+
+        res.json({ message: 'Customers seated successfully' });
+    } catch (error) {
+        console.error('Error seating customers:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per completare il pagamento di un ordine
+app.post('/complete_payment', async (req, res) => {
+    const { orderId } = req.body;
+
+    try {
+        const result = await client.query(
+            'UPDATE "Ordine" SET "Pagato" = true WHERE "Cod_ordine" = $1 RETURNING *',
+            [orderId]
+        );
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error completing payment:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post ('/free_table', async (req, res) => {
+    const { tableId } = req.body;
+
+    try {
+        await client.query(
+            'UPDATE "Tavolo" SET "Disponibile" = true WHERE "Cod_tavolo" = $1',
+            [tableId]
+        );
+
+        res.json({ message: 'Table freed successfully' });
+    } catch (error) {
+        console.error('Error freeing table:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per ottenere gli ordini con i piatti associati
+app.get('/kitchen_orders', async (req, res) => {
+    try {
+        const orders = await client.query(`
+            SELECT o."Cod_ordine", o."Totale", o."Note_ordine", o."Cod_tavolo", o."Ora", o."Completato", o."Pagato",
+                   mo."Cod_menu", mo."Quantita", mo."Pronto", m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"
+            FROM "Ordine" o
+            JOIN "Menu_ordine" mo ON o."Cod_ordine" = mo."Cod_ordine"
+            JOIN "Menu" m ON mo."Cod_menu" = m."Cod_menu"
+            ORDER BY o."Ora" ASC
+        `);
+        res.json(orders.rows);
+    } catch (error) {
+        console.error('Error fetching kitchen orders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+// Rotta per marcare un piatto come completato o non completato
+app.post('/toggle_dish_completion', async (req, res) => {
+    const { orderId, menuId, completato } = req.body;
+
+    try {
+        await client.query(
+            'UPDATE "Menu_ordine" SET "Pronto" = $1 WHERE "Cod_ordine" = $2 AND "Cod_menu" = $3',
+            [completato, orderId, menuId]
+        );
+
+        // Controlla se tutti i piatti dell'ordine sono completati
+        const result = await client.query(
+            'SELECT COUNT(*) FROM "Menu_ordine" WHERE "Cod_ordine" = $1 AND "Pronto" = false',
+            [orderId]
+        );
+
+        if (result.rows[0].count == 0) {
+            // Se tutti i piatti sono completati, aggiorna lo stato dell'ordine
+            await client.query(
+                'UPDATE "Ordine" SET "Completato" = true WHERE "Cod_ordine" = $1',
+                [orderId]
+            );
+        } else {
+            // Se non tutti i piatti sono completati, aggiorna lo stato dell'ordine
+            await client.query(
+                'UPDATE "Ordine" SET "Completato" = false WHERE "Cod_ordine" = $1',
+                [orderId]
+            );
+        }
+
+        res.json({ message: 'Dish completion status updated successfully' });
+    } catch (error) {
+        console.error('Error updating dish completion status:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

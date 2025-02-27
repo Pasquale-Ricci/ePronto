@@ -29,6 +29,7 @@
 }
 
 .tableSelector {
+    margin-top: 100px;
     flex: 1;
 }
 
@@ -52,10 +53,6 @@
 
 .tableBtn:hover {
     background-color: #e0e0e0;
-}
-
-.selectedTableBtn {
-    background-color: #ffcccc; /* Colore rosso chiaro */
 }
 
 .ordersContainer {
