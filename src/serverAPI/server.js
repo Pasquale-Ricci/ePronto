@@ -8,7 +8,6 @@ import bodyParser from 'body-parser';
 
 const { Client } = pkg;
 
-
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -74,6 +73,7 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 // Rotta degli alert
 app.post('/alerts', async (req, res) => {
     try {
@@ -105,22 +105,19 @@ app.post('/alerts', async (req, res) => {
     }
 });
 
-//Rotta per lo staff
+// Rotta per lo staff
 app.post('/staff', async (req, res) => {
     try {
         const staff = await client.query(
             `SELECT * FROM "Users" WHERE "Ruolo" = 'dipendente' AND "Cod_ristorante" = 1`
         );
         res.json(staff.rows);
-    }
-    
-    catch(error){
+    } catch (error) {
         console.log(error);
-        
     }
-})
+});
 
-//Aggiungere dipendente
+// Aggiungere dipendente
 app.post('/addStaff', async (req, res) => {
     const { cod_dipendente } = req.body;
     const { cod_ristorante } = req.body;
@@ -131,18 +128,14 @@ app.post('/addStaff', async (req, res) => {
             WHERE "ID" = $1 RETURNING *`, [cod_dipendente]
         );
         res.json(staff.rows);
-    }
-    
-    catch(error){
+    } catch (error) {
         console.log(error);
-        
     }
-})
+});
 
-//Rimuovere dipendente
+// Rimuovere dipendente
 app.post('/removeStaff', async (req, res) => {
     const { ID } = req.body;
-
 
     try {
         const staff = await client.query(
@@ -151,13 +144,10 @@ app.post('/removeStaff', async (req, res) => {
             WHERE "ID" = $1 RETURNING *`, [ID]
         );
         res.json(staff.rows);
-    }
-    
-    catch(error){
+    } catch (error) {
         console.log(error);
-        
     }
-})
+});
 
 // Rotta per il menu
 app.post('/menu', async (req, res) => {
@@ -170,7 +160,7 @@ app.post('/menu', async (req, res) => {
         console.error('Error fetching menu:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
-})
+});
 
 // Rotta per il report degli ordini
 app.post('/orderReport', async (req, res) => {
@@ -192,9 +182,70 @@ app.post('/beverageReport', async (req, res) => {
             'SELECT "Nome", "Quantita", "Quantita_max", "Quantita_critica" FROM "Beverage";'
         );
         res.json(beverageReport.rows);
-
     } catch (error) {
         console.error('Error fetching beverage report:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per ottenere la lista dei tavoli
+app.get('/tables', async (req, res) => {
+    try {
+        const tables = await client.query(
+            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = 1;'
+        );
+        res.json(tables.rows);
+    } catch (error) {
+        console.error('Error fetching tables:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per inserire un nuovo ordine
+app.post('/orders', async (req, res) => {
+    const { table, totale, notes } = req.body;
+
+    try {
+        const result = await client.query(
+            'INSERT INTO "Ordine" ("Cod_tavolo", "Totale", "Note_ordine", "Ora", "Completato") VALUES ($1, $2, $3, NOW(), false) RETURNING "Cod_ordine"',
+            [table, totale, notes]
+        );
+
+        const cod_ordine = result.rows[0].Cod_ordine;
+        res.status(201).json({ cod_ordine });
+    } catch (error) {
+        console.error('Error inserting order:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per inserire i piatti ordinati
+app.post('/menu_order', async (req, res) => {
+    const { cod_ordine, cod_menu, quantita } = req.body;
+
+    try {
+        await client.query(
+            'INSERT INTO "Menu_ordine" ("Cod_ordine", "Cod_menu", "Quantita") VALUES ($1, $2, $3)',
+            [cod_ordine, cod_menu, quantita]
+        );
+
+        res.status(201).json({ message: 'Menu item added to order successfully' });
+    } catch (error) {
+        console.error('Error inserting menu item to order:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per ottenere gli ordini completati
+app.get('/completed_orders', async (req, res) => {
+
+    try {
+        const completedOrders = await client.query(
+            'SELECT * FROM "Ordine" WHERE "Completato" = true'
+        );
+        res.json(completedOrders.rows);
+    } catch (error) {
+        console.error('Error fetching completed orders:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

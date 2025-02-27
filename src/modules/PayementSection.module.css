@@ -18,18 +18,31 @@
     background-color: hsl(0, 100%, 88%);
 }
 
-.tableList {
-    background-color: white;
-    margin-top: 150px;
-    margin-bottom: 20px;;
-    flex-wrap: wrap;
+.container {
     display: flex;
-    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tableSelector {
+    flex: 1;
+}
+
+.tableSelector ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tableSelector li {
+    margin-bottom: 10px;
 }
 
 .tableBtn {
     font-size: 16px;
-    margin: 10px;
     padding: 10px 20px;
     cursor: pointer;
     border: 1px solid #ccc;
@@ -45,71 +58,36 @@
     background-color: #ffcccc; /* Colore rosso chiaro */
 }
 
-.menu {
-    display:flex;
-    flex-direction: column;
+.ordersContainer {
+    margin-top: 200px;
+    flex: 2;
+    padding: 20px;
     background-color: white;
     border-radius: 5px;
-    padding: 10px;
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
 }
 
-.menuItem {
+.orderItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 0;
     padding: 10px;
     border-bottom: 1px solid #ccc;
 }
 
-.menuButtons {
+.discountButtons {
     display: flex;
-    align-items: center;
+    gap: 10px;
 }
 
-.menuBtn {
-    margin: 0 5px;
+.discountButtons button {
     padding: 5px 10px;
-    font-size: 16px;
+    font-size: 14px;
     cursor: pointer;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
 }
 
-.menuBtn:hover {
-    background-color: #e0e0e0;
-}
-
-.menuCount {
-    margin: 0 10px;
-    font-size: 16px;
-}
-
-.notes {
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.submitBtn {
-    font-size: 16px;
-    margin: 24px;
-    padding: 10px 20px;
-    width: auto;
-    height: auto;
-    margin-top: 20px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.submitBtn:hover {
+.discountButtons button:hover {
     background-color: #e0e0e0;
 }
