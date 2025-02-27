@@ -54,26 +54,74 @@ app.post('/register', async (req, res) => {
     }
 });
 
+
 // Rotta di login
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
-
     try {
         const result = await client.query('SELECT * FROM "Users" WHERE "Email" = $1', [email]);
+        if (result.rows.length === 0) {
+            return res.status(401).json({ error: 'Invalid credentials' });
+        }
         const user = result.rows[0];
+        if (!user.Password_hash) {
+            return res.status(500).json({ error: 'Password hash is missing in database' });
+        }
+        const isMatch = await bcrypt.compare(password, user.Password_hash);
+        if (isMatch) {
+            const token = jwt.sign(
+                { id: user.ID, email: user.Email, ruolo: user.Ruolo },
+                'your_jwt_secret',
+                { expiresIn: '1h' }
+            );
+            const firstLogin = user.Cod_ristorante === null;
 
-        if (user && await bcrypt.compare(password, user.password_hash)) {
-            const token = jwt.sign({ id: user.id, email: user.email, ruolo: user.ruolo }, 'your_jwt_secret', { expiresIn: '1h' });
-            res.json({ token });
-            localStorage.setItem({Cod_ristorante : 1}, {ruolo : "proprietario"})
+            res.json({  
+                token,
+                ruolo: user.Ruolo,
+                cod_ristorante: user.Cod_ristorante,
+                firstLogin
+            });
+
         } else {
             res.status(401).json({ error: 'Invalid credentials' });
         }
     } catch (error) {
-        console.error('Error during login:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 });
+
+
+
+// Rotta per la registrazione del ristorante
+app.post('/register-restaurant', async (req, res) => {
+    const { nome, email, citta, indirizzo} = req.body;
+
+    if(!nome || !email) {
+        return res.status(400).json({ error: 'Nome ristorante e email sono obbligatori' });
+    }
+    try {
+        console.log(`Registrazione ristorante: Nome=${nome}, Email=${email}, citta=${citta}, indirizzo=${indirizzo}`);
+       
+        const result = await client.query(
+            'INSERT INTO "Ristorante" ("Nome", "Citta", "Indirizzo") VALUES ($1, $2,$3) RETURNING "Cod_ristorante"',
+            [nome, citta, indirizzo]
+        );
+
+        const codRistorante = result.rows[0].Cod_ristorante;
+
+        await client.query(
+            'UPDATE "Users" SET "Cod_ristorante" = $1 WHERE "Email" = $2',
+            [codRistorante, email]
+        );
+
+        res.json({ cod_ristorante: codRistorante });
+    } catch (error) {
+        res.status(500).json({ error: 'Errore nella registrazione del ristorante', details: error.message });
+    }
+});
+
+
 // Rotta degli alert
 app.post('/alerts', async (req, res) => {
     try {
