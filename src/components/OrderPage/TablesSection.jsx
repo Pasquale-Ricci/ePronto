@@ -1,6 +1,6 @@
 import Header from "../LandingPage/Header";
 import { useState, useEffect } from "react";
-import styles from '../../modules/TablesSection.module.css';
+import styles from "../../modules/TablesSection.module.css";
 import OrderPage from "../../pages/OrderPage";
 
 function TablesSection() {
@@ -31,44 +31,23 @@ function TablesSection() {
   // Funzione per mettere a sedere i clienti
   async function seatCustomers(tableId) {
     try {
-      const response = await fetch(
-        `http://localhost:3000/seat_customers/${tableId}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      getTables();
+      const response = await fetch("http://localhost:3000/seat_customers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tableId: tableId }),
+      });
     } catch (error) {
       console.error("Error seating customers:", error);
     }
   }
-
-    // Funzione per mettere a sedere i clienti
-    async function seatCustomers(tableId) {
-        try {
-            const response = await fetch('http://localhost:3000/seat_customers', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ tableId: tableId })
-            });
-          } catch (error) {
-            console.error('Error seating customers:', error);
-          }
-        }
   if (!view) {
     return <OrderPage />;
   }
-
+  useEffect(() => {
+    getTables();
+  }, []);
   return (
     <>
       <Header />

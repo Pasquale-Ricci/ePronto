@@ -92,7 +92,7 @@ function HeroSection() {
           },
           body: JSON.stringify({
             nome: restaurantName,
-            email: email,
+            id_proprietario: localStorage.getItem("cod_utente"),
             citta: citta,
             indirizzo: indirizzo,
           }),

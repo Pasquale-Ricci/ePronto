@@ -124,13 +124,12 @@ app.post('/markAsRead', async (req, res) => {
 
 // Rotta per la registrazione del ristorante
 app.post('/register-restaurant', async (req, res) => {
-    const { nome, email, citta, indirizzo} = req.body;
+    const { nome, id_proprietario, citta, indirizzo} = req.body;
 
-    if(!nome || !email) {
-        return res.status(400).json({ error: 'Nome ristorante e email sono obbligatori' });
+    if(!nome) {
+        return res.status(400).json({ error: 'Nome ristorante è obbligatorio' });
     }
     try {
-        console.log(`Registrazione ristorante: Nome=${nome}, Email=${email}, citta=${citta}, indirizzo=${indirizzo}`);
        
         const result = await client.query(
             'INSERT INTO "Ristorante" ("Nome", "Citta", "Indirizzo") VALUES ($1, $2,$3) RETURNING "Cod_ristorante"',
@@ -140,8 +139,8 @@ app.post('/register-restaurant', async (req, res) => {
         const codRistorante = result.rows[0].Cod_ristorante;
 
         await client.query(
-            'UPDATE "Users" SET "Cod_ristorante" = $1 WHERE "Email" = $2',
-            [codRistorante, email]
+            'UPDATE "Users" SET "Cod_ristorante" = $1 WHERE "ID" = $2',
+            [codRistorante, id_proprietario]
         );
 
         res.json({ cod_ristorante: codRistorante });
@@ -260,9 +259,11 @@ app.post('/removeStaff', async (req, res) => {
 
 // Rotta per il menu
 app.post('/menu', async (req, res) => {
+    const {cod_ristorante} = req.body;
     try {
         const menu = await client.query(
-            'SELECT * FROM "Menu" WHERE "Cod_ristorante" = 1 AND "Disponibile" = true'
+            'SELECT * FROM "Menu" WHERE "Cod_ristorante" = $1 AND "Disponibile" = true', 
+            [cod_ristorante]
         );
         res.json(menu.rows); 
     } catch (error) {
@@ -301,7 +302,7 @@ app.post('/beverageReport', async (req, res) => {
 app.get('/tables', async (req, res) => {
     try {
         const tables = await client.query(
-            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = 1;'
+            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = 24;'
         );
         res.json(tables.rows);
     } catch (error) {

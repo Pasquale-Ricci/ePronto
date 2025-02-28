@@ -1,7 +1,7 @@
 import Header from "../LandingPage/Header";
 import { useEffect, useState } from "react";
 import OrderPage from "../../pages/OrderPage";
-import styles from '../../modules/OrderSection.module.css';
+import styles from "../../modules/OrderSection.module.css";
 
 function OrderSection() {
   const [view, setView] = useState(true);
@@ -14,18 +14,18 @@ function OrderSection() {
   // Funzione per visualizzare i tavoli disponibili
   async function getTables() {
     try {
-      const response = await fetch('http://localhost:3000/tables', {
-        method: 'GET',
+      const response = await fetch("http://localhost:3000/tables", {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json'
-        }
+          "Content-Type": "application/json",
+        },
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       setTables(await response.json());
     } catch (error) {
-      console.error('Error fetching tables:', error);
+      console.error("Error fetching tables:", error);
     }
   }
 
@@ -42,7 +42,9 @@ function OrderSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cod_ristorante: 1 }),
+        body: JSON.stringify({
+          cod_ristorante: localStorage.getItem("cod_ristorante"),
+        }),
       });
 
       if (!response.ok) {
@@ -101,7 +103,11 @@ function OrderSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ table: selectedTable, totale, notes }),
+        body: JSON.stringify({
+          table: selectedTable,
+          totale: totale,
+          notes: notes,
+        }),
       });
 
       if (!response.ok) {

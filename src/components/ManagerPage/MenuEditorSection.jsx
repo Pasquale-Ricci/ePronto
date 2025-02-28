@@ -13,9 +13,8 @@ function MenuEditorSection({ changeView }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const codRistorante = parseInt(
-      window.localStorage.getItem("Cod_ristorante")
-    );
+    const codRistorante = window.localStorage.getItem("cod_ristorante");
+
     if (!codRistorante) {
       alert("Codice ristorante non trovato. Effettua il login.");
       return;
