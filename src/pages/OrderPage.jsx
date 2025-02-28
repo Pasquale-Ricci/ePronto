@@ -3,7 +3,6 @@ import Header from "../components/LandingPage/Header";
 import styles from '../modules/OrderPage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus, faChair, faCashRegister } from '@fortawesome/free-solid-svg-icons';
-
 import OrderSection from "../components/OrderPage/OrderSection";
 import PayementSection from "../components/OrderPage/PaymentSection";
 import TablesSection from "../components/OrderPage/TablesSection";

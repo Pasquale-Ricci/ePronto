@@ -3,21 +3,21 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background: linear-gradient(90deg, hsl(0, 0%, 46%), hsl(0, 63%, 46%)); /* Aggiungi il gradiente qui */
+    background: linear-gradient(90deg, hsl(0, 0%, 46%), hsl(0, 63%, 46%));
     padding: 5px;
     position: fixed;
     top: 0;
     width: 100%;
     z-index: 1000;
+    gap: 60px;
 }
 
 .header h2 {
     color: white;
     font-size: 2em;
-    margin-left: 50px;
 }
 
-.logoutBtn{
+.logoutBtn {
     background-color: hsl(0, 57%, 61%);
     border: none;
     width: 150px;
@@ -26,24 +26,21 @@
     color: white;
     cursor: pointer;
     font-size: 1em;
-    margin-top: 0%;
-    margin-left: 85%;
+    margin: 0;
     padding: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
-.logoutBtn:hover{
+
+.logoutBtn:hover {
     background-color: hsl(0, 15%, 80%);
 }
 
-.headerLoggedIn{
+.headerLoggedIn {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    width: 100%;
+    gap: 20px; /* Spazio tra gli elementi */
 }
 
 .logo {
     height: 95px;
-
-    margin-left: 10px;
 }

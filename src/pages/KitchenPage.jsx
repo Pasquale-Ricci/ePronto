@@ -7,6 +7,7 @@ import Header from '../components/LandingPage/Header';
 function KitchenPage() {
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
+    const codRistorante = localStorage.getItem('cod_ristorante');
 
     // Funzione per recuperare gli ordini con i piatti associati
     async function getKitchenOrders() {
@@ -41,17 +42,20 @@ function KitchenPage() {
                 }
                 return acc;
             }, []);
-            setOrders(groupedOrders);
+
+            setOrders(groupedOrders); // Aggiorna lo stato degli ordini
             if (groupedOrders.length > 0) {
                 setSelectedOrder(groupedOrders[0].Cod_ordine);
             }
+
+            return groupedOrders; // Restituisci i dati degli ordini
         } catch (error) {
             console.error('Error fetching kitchen orders:', error);
+            return []; // Restituisci un array vuoto in caso di errore
         }
     }
 
-    // Funzione per marcare un piatto come completato o non completato
-    async function toggleDishCompletion(orderId, menuId, completato) {
+    async function toggleDishCompletion(orderId, menuId, completato, dishName) {
         try {
             const response = await fetch('http://localhost:3000/toggle_dish_completion', {
                 method: 'POST',
@@ -60,15 +64,62 @@ function KitchenPage() {
                 },
                 body: JSON.stringify({ orderId, menuId, completato })
             });
-
+    
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
-            // Aggiorna la lista degli ordini dopo aver completato il piatto
-            getKitchenOrders();
+    
+            // Invia notifica del piatto completato
+            const dishMessage = `Il piatto ${dishName} dell'ordine #${orderId} è stato completato.`;
+            await notify(orderId, dishMessage);
+    
+            // Aggiorna la lista degli ordini
+            const updatedOrders = await getKitchenOrders();
+    
+            // Verifica se l'intero ordine è completato
+            const order = updatedOrders.find(o => o.Cod_ordine === orderId);
+            if (order && order.dishes.every(dish => dish.Pronto)) {
+                // Contrassegna l'ordine come completato nel database
+                const completeResponse = await fetch('http://localhost:3000/complete_order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ orderId })
+                });
+    
+                if (!completeResponse.ok) {
+                    throw new Error(`HTTP error! status: ${completeResponse.status}`);
+                }
+    
+                // Invia notifica dell'ordine completato
+                const orderMessage = `L'ordine #${orderId} è stato completato.`;
+                await notify(orderId, orderMessage);
+    
+                // Aggiorna la lista degli ordini nel frontend
+                await getKitchenOrders();
+            }
         } catch (error) {
             console.error('Error toggling dish completion:', error);
+        }
+    }
+    
+
+    // Funzione per inviare la notifica ai camerieri
+    async function notify(orderId, message) {
+        try {
+            const response = await fetch('http://localhost:3000/notify', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ orderId, codRistorante, message })
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            console.error('Error sending notifications:', error);
         }
     }
 
@@ -115,7 +166,7 @@ function KitchenPage() {
                                                 </div>
                                                 <button
                                                     className={`${styles.dishBtn} ${dish.Pronto ? styles.dishBtnCompleted : ''}`}
-                                                    onClick={() => toggleDishCompletion(order.Cod_ordine, dish.Cod_menu, !dish.Pronto)}
+                                                    onClick={() => toggleDishCompletion(order.Cod_ordine, dish.Cod_menu, !dish.Pronto, dish.Nome)}
                                                 >
                                                     {dish.Pronto ? 'Completato' : <FontAwesomeIcon icon={faCircleCheck} />}
                                                 </button>

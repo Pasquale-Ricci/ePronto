@@ -17,7 +17,6 @@ function ManagerPage() {
     return (
       <>
         <Header />
-
         <div className={style.sectionsContainer}>
           <div className={style.sectionColumn}>
             <MenuSection></MenuSection>

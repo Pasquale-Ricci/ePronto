@@ -72,6 +72,7 @@ app.post('/login', async (req, res) => {
                 { id: user.ID, email: user.Email, ruolo: user.Ruolo },
                 'your_jwt_secret',
                 { expiresIn: '1h' }
+                
             );
             const firstLogin = user.Cod_ristorante === null;
 
@@ -79,7 +80,8 @@ app.post('/login', async (req, res) => {
                 token,
                 ruolo: user.Ruolo,
                 cod_ristorante: user.Cod_ristorante,
-                firstLogin
+                firstLogin,
+                ID: user.ID
             });
 
         } else {
@@ -91,8 +93,34 @@ app.post('/login', async (req, res) => {
 });
 
 
+//Rotta Notifiche
+app.post('/notifications', async (req,res) => {
+    const{userId} = req.body;
+    try {
+        const notifications = await client.query(
+            'SELECT * FROM "Notifiche" WHERE "ID_utente" = $1',
+            [userId]
+        );
+        res.json(notifications.rows);
+    } catch (error) {
+        console.error('Error fetching completed orders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
 
-
+//Rotta per segnare come lette le notifiche
+app.post('/markAsRead', async (req, res) => {
+    const { id } = req.body;
+    try {
+        const notifications = await client.query(
+            'UPDATE "Notifiche" SET "Letto"= true WHERE "Notifica_id" = $1',
+            [id]
+        );
+    } catch (error) {
+        console.error('Error fetching completed orders:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
 
 // Rotta per la registrazione del ristorante
 app.post('/register-restaurant', async (req, res) => {
@@ -121,8 +149,6 @@ app.post('/register-restaurant', async (req, res) => {
         res.status(500).json({ error: 'Errore nella registrazione del ristorante', details: error.message });
     }
 });
-
-
 
 // Rotta degli alert
 app.post('/alerts', async (req, res) => {
@@ -155,47 +181,80 @@ app.post('/alerts', async (req, res) => {
     }
 });
 
-// Rotta per lo staff
 app.post('/staff', async (req, res) => {
+    const { cod_ristorante } = req.body;
+
+    // Validazione dell'input
+    if (!cod_ristorante) {
+        return res.status(400).json({ error: 'cod_ristorante è obbligatorio' });
+    }
+
     try {
         const staff = await client.query(
-            `SELECT * FROM "Users" WHERE "Ruolo" = 'dipendente' AND "Cod_ristorante" = 1`
+            `SELECT * FROM "Users" 
+             WHERE "Ruolo" != 'Proprietario' 
+             AND "Cod_ristorante" = $1`,
+            [cod_ristorante]
         );
         res.json(staff.rows);
     } catch (error) {
-        console.log(error);
+        console.error('Errore durante il recupero dello staff:', error);
+        res.status(500).json({ error: 'Errore interno del server' });
     }
 });
 
-// Aggiungere dipendente
 app.post('/addStaff', async (req, res) => {
-    const { cod_dipendente } = req.body;
-    const { cod_ristorante } = req.body;
+    const { cod_dipendente, cod_ristorante } = req.body;
+
+    // Validazione dell'input
+    if (!cod_dipendente || !cod_ristorante) {
+        return res.status(400).json({ error: 'cod_dipendente e cod_ristorante sono obbligatori' });
+    }
+
     try {
         const staff = await client.query(
             `UPDATE "Users"
-            SET "Cod_ristorante" = 1
-            WHERE "ID" = $1 RETURNING *`, [cod_dipendente]
+             SET "Cod_ristorante" = $1
+             WHERE "ID" = $2
+             AND "Ruolo" != 'Proprietario'
+             RETURNING *`,
+            [cod_ristorante, cod_dipendente]
         );
-        res.json(staff.rows);
+
+        // Verifica se il dipendente è stato trovato e aggiornato
+        if (staff.rows.length === 0) {
+            return res.status(404).json({ error: 'Dipendente non trovato o già associato a un ristorante' });
+        }
+
+        // Restituisci il dipendente aggiornato
+        res.json(staff.rows[0]);
     } catch (error) {
-        console.log(error);
+        console.error('Errore durante l\'aggiornamento del dipendente:', error);
+        res.status(500).json({ error: 'Errore interno del server' });
     }
 });
 
-// Rimuovere dipendente
 app.post('/removeStaff', async (req, res) => {
     const { ID } = req.body;
 
     try {
         const staff = await client.query(
             `UPDATE "Users"
-            SET "Cod_ristorante" = NULL
-            WHERE "ID" = $1 RETURNING *`, [ID]
+             SET "Cod_ristorante" = NULL
+             WHERE "ID" = $1
+             RETURNING *`,
+            [ID]
         );
-        res.json(staff.rows);
+
+        // Verifica se il dipendente è stato trovato e aggiornato
+        if (staff.rows.length === 0) {
+            return res.status(404).json({ error: 'Dipendente non trovato' });
+        }
+
+        res.json(staff.rows[0]);
     } catch (error) {
-        console.log(error);
+        console.error('Errore durante la rimozione del dipendente:', error);
+        res.status(500).json({ error: 'Errore interno del server' });
     }
 });
 
@@ -354,7 +413,7 @@ app.get('/kitchen_orders', async (req, res) => {
     try {
         const orders = await client.query(`
             SELECT o."Cod_ordine", o."Totale", o."Note_ordine", o."Cod_tavolo", o."Ora", o."Completato", o."Pagato",
-                   mo."Cod_menu", mo."Quantita", mo."Pronto", m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"
+            mo."Cod_menu", mo."Quantita", mo."Pronto", m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"
             FROM "Ordine" o
             JOIN "Menu_ordine" mo ON o."Cod_ordine" = mo."Cod_ordine"
             JOIN "Menu" m ON mo."Cod_menu" = m."Cod_menu"
@@ -367,43 +426,84 @@ app.get('/kitchen_orders', async (req, res) => {
     }
 });
 
-
 // Rotta per marcare un piatto come completato o non completato
 app.post('/toggle_dish_completion', async (req, res) => {
     const { orderId, menuId, completato } = req.body;
 
     try {
-        await client.query(
-            'UPDATE "Menu_ordine" SET "Pronto" = $1 WHERE "Cod_ordine" = $2 AND "Cod_menu" = $3',
+        const result = await client.query(
+            `UPDATE "Menu_ordine"
+             SET "Pronto" = $1
+             WHERE "Cod_ordine" = $2 AND "Cod_menu" = $3
+             RETURNING *`,
             [completato, orderId, menuId]
         );
 
-        // Controlla se tutti i piatti dell'ordine sono completati
-        const result = await client.query(
-            'SELECT COUNT(*) FROM "Menu_ordine" WHERE "Cod_ordine" = $1 AND "Pronto" = false',
-            [orderId]
-        );
-
-        if (result.rows[0].count == 0) {
-            // Se tutti i piatti sono completati, aggiorna lo stato dell'ordine
-            await client.query(
-                'UPDATE "Ordine" SET "Completato" = true WHERE "Cod_ordine" = $1',
-                [orderId]
-            );
-        } else {
-            // Se non tutti i piatti sono completati, aggiorna lo stato dell'ordine
-            await client.query(
-                'UPDATE "Ordine" SET "Completato" = false WHERE "Cod_ordine" = $1',
-                [orderId]
-            );
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Piatto non trovato' });
         }
 
-        res.json({ message: 'Dish completion status updated successfully' });
+        res.json(result.rows[0]);
     } catch (error) {
-        console.error('Error updating dish completion status:', error);
+        console.error('Error toggling dish completion:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+// Rotta per contrassegnare un ordine come completato
+app.post('/complete_order', async (req, res) => {
+    const { orderId } = req.body;
+
+    try {
+        const result = await client.query(
+            `UPDATE "Ordine"
+             SET "Completato" = TRUE
+             WHERE "Cod_ordine" = $1
+             RETURNING *`,
+            [orderId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Ordine non trovato' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (error) {
+        console.error('Error completing order:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Rotta per inviare notifiche ai camerieri
+app.post('/notify', async (req, res) => {
+    const { orderId, codRistorante, message } = req.body;
+
+    try {
+        // Recupera tutti gli utenti con il ruolo di cameriere e appartenenti allo stesso ristorante
+        const result = await client.query(
+            `SELECT "ID" FROM "Users"
+             WHERE "Ruolo" = $1 AND "Cod_ristorante" = $2`,
+            ['Cameriere', codRistorante]
+        );
+
+        const cameriereIds = result.rows.map(row => row.ID);
+
+        // Invia una notifica a ciascun cameriere
+        for (const cameriereId of cameriereIds) {
+            await client.query(
+                `INSERT INTO "Notifiche" ("ID_utente", "Messaggio")
+                 VALUES ($1, $2)`,
+                [cameriereId, message]
+            );
+        }
+
+        res.json({ message: 'Notifiche inviate ai camerieri.' });
+    } catch (error) {
+        console.error('Error sending notifications:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 // Avvia il server
 const PORT = process.env.PORT || 3000;

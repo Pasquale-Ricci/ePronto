@@ -2,6 +2,7 @@ import styles from "../../modules/Header.module.css";
 import logo from "../../assets/iconaWeb.png";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Notification from "../OrderPage/Notification";
 
 function Header() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Header() {
 
   // Controlla se l'utente è loggato al caricamento del componente
   useEffect(() => {
-    const token = window.localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
     } else {
@@ -18,9 +19,7 @@ function Header() {
   }, []);
 
   const handleLogout = () => {
-    window.localStorage.removeItem("token");
-    window.localStorage.removeItem("ruolo");
-    window.localStorage.removeItem("cod_ristorante");
+    localStorage.clear();
     setIsLoggedIn(false);
     navigate("/");
   };
@@ -35,6 +34,7 @@ function Header() {
         // Header per utenti loggati
         <div className={styles.headerLoggedIn}>
           <button className={styles.logoutBtn} onClick={handleLogout}>Logout</button>
+          <Notification />
         </div>
       ) : (
         // Header per utenti non loggati

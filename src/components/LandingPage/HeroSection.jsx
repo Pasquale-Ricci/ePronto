@@ -48,8 +48,10 @@ function HeroSection() {
 
       if (data.token) {
         alert("Login effettuato con successo!");
-        window.localStorage.setItem("token", data.token);
-        window.localStorage.setItem("ruolo", data.ruolo);
+        console.log("Dati:", data); // 🔍 Debug
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("ruolo", data.ruolo);
+        localStorage.setItem("cod_utente", data.ID);
 
         if (data.firstLogin && data.ruolo === "proprietario") {
           setFirstLogin(true);
