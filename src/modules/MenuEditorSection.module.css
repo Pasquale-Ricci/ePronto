@@ -1,0 +1,185 @@
+/* Contenitore principale */
+.menuFormContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--background-dark);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    color: var(--text-light);
+    text-align: center;
+}
+
+/* Titolo */
+.menuFormTitle {
+    font-size: 26px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: var(--text-light);
+}
+
+/* Bottoni */
+.menuFormBackButton,
+.menuFormSubmitButton {
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.menuFormBackButton {
+    background-color: hsl(0, 57%, 61%);
+    border: none;
+    width: 150px;
+    height: 50px;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 0%;
+    margin-left: 3%;
+    padding: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menuFormBackButton:hover {
+    background-color: var(--primary-hover);
+}
+
+.menuFormSubmitButton {
+    background-color: hsl(0, 57%, 61%);
+    border: none;
+    width: 150px;
+    height: 50px;
+    border-radius: 5px;
+    color: black;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 5%;
+    margin-left: 3%;
+    padding: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menuFormSubmitButton:hover {
+    background-color: var(--success-hover);
+}
+
+/* Form */
+.menuForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Gruppi di input */
+.menuFormGroup {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Etichette */
+.menuFormLabel {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: var(--text-light);
+    text-align: left;
+}
+
+/* Input */
+.menuFormInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid var(--input-border);
+    border-radius: var(--border-radius);
+    background-color: hsl(0, 57%, 61%);
+    color: var(--text-light);
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.menuFormInput:focus {
+    border-color: var(--primary-color);
+    background-color: var(--background-dark);
+    outline: none;
+}
+
+/* Contenitore del toggle switch */
+.menuFormToggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Input nascosto */
+.menuFormToggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Contenitore del toggle switch */
+.menuFormToggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Input nascosto */
+.menuFormToggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Slider (lo sfondo del toggle) */
+.menuFormToggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white; /* Colore di default */
+    border: 2px solid  hsl(0, 57%, 61%); /* Bordo blu */
+    border-radius: 34px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Pallino del toggle */
+.menuFormToggleSlider::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color:  hsl(0, 57%, 61%); /* Colore blu */
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Quando il toggle è attivo */
+.menuFormToggle input:checked + .menuFormToggleSlider {
+    background-color: rgb(0, 128, 62); /* Sfondo blu */
+    border-color: rgb(0, 128, 62); /* Bordo blu */
+}
+
+.menuFormToggle input:checked + .menuFormToggleSlider::before {
+    background-color: white; /* Pallino bianco */
+    transform: translateX(26px); /* Sposta il pallino a destra */
+}

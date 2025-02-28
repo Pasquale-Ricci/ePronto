@@ -345,6 +345,29 @@ app.post('/menu_order', async (req, res) => {
     }
 });
 
+//Rotta per creare il menu
+app.post('/create_menu', async (req, res) => {
+    const { nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, Cod_ristorante } = req.body;
+    
+    console.log("Dati ricevuti:", req.body); // LOG PER DEBUG
+
+    if (!Cod_ristorante || isNaN(Cod_ristorante)) {
+        return res.status(400).json({ error: "Cod_ristorante non valido" });
+    }
+
+    try {
+        await client.query(
+            'INSERT INTO "Menu" ("Nome", "Descrizione", "Allergeni", "Prezzo", "Tipo_piatto", "Tempo_cottura", "Disponibile", "Cod_ristorante") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
+            [nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, parseInt(Cod_ristorante)]
+        );
+        res.json({ message: 'Menu added successfully' });
+    } catch (error) {   
+        console.error('Error adding menu:', error);
+        res.status(500).json({ error: 'Internal server error' });   
+    }
+});
+
+
 // Rotta per ottenere gli ordini completati
 app.get('/completed_orders', async (req, res) => {
 
@@ -412,12 +435,15 @@ app.post ('/free_table', async (req, res) => {
 app.get('/kitchen_orders', async (req, res) => {
     try {
         const orders = await client.query(`
-            SELECT o."Cod_ordine", o."Totale", o."Note_ordine", o."Cod_tavolo", o."Ora", o."Completato", o."Pagato",
-            mo."Cod_menu", mo."Quantita", mo."Pronto", m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"
+           SELECT o."Cod_ordine", o."Totale", o."Note_ordine", o."Cod_tavolo", 
+            TO_CHAR(o."Ora", 'HH24:MI') AS "Ora", 
+            o."Completato", o."Pagato",
+            mo."Cod_menu", mo."Quantita", mo."Pronto", 
+            m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"
             FROM "Ordine" o
             JOIN "Menu_ordine" mo ON o."Cod_ordine" = mo."Cod_ordine"
             JOIN "Menu" m ON mo."Cod_menu" = m."Cod_menu"
-            ORDER BY o."Ora" ASC
+            ORDER BY o."Ora" ASC;
         `);
         res.json(orders.rows);
     } catch (error) {

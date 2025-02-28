@@ -1,27 +1,32 @@
-import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStickyNote, faClock, faChair, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
-import styles from '../modules/KitchenPage.module.css';
-import Header from '../components/LandingPage/Header';
+import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faStickyNote,
+  faClock,
+  faChair,
+  faCircleCheck,
+} from "@fortawesome/free-solid-svg-icons";
+import styles from "../modules/KitchenPage.module.css";
+import Header from "../components/LandingPage/Header";
 
 function KitchenPage() {
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState(null);
     const codRistorante = localStorage.getItem('cod_ristorante');
 
-    // Funzione per recuperare gli ordini con i piatti associati
-    async function getKitchenOrders() {
-        try {
-            const response = await fetch('http://localhost:3000/kitchen_orders', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+  // Funzione per recuperare gli ordini con i piatti associati
+  async function getKitchenOrders() {
+    try {
+      const response = await fetch("http://localhost:3000/kitchen_orders", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
             const data = await response.json();
             // Raggruppa i piatti per ordine
@@ -123,12 +128,12 @@ function KitchenPage() {
         }
     }
 
-    useEffect(() => {
-        getKitchenOrders();
-    }, []);
+  useEffect(() => {
+    getKitchenOrders();
+  }, []);
 
-    const pendingOrders = orders.filter(order => !order.Completato);
-    const completedOrders = orders.filter(order => order.Completato);
+  const pendingOrders = orders.filter((order) => !order.Completato);
+  const completedOrders = orders.filter((order) => order.Completato);
 
     return (
         <>
