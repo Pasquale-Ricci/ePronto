@@ -12,6 +12,8 @@ function HeroSection() {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [restaurantName, setRestaurantName] = useState("");
+  const [nome, setNome] = useState("");
+  const [cognome, setCognome] = useState("");
   const [email, setEmail] = useState("");
   const [indirizzo, setIndirizzo] = useState("");
   const [citta, setCitta] = useState("");
@@ -41,7 +43,12 @@ function HeroSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: loginEmail, password: loginPassword }),
+        body: JSON.stringify({
+          nome: nome,
+          cognome: cognome,
+          email: loginEmail,
+          password: loginPassword,
+        }),
       });
 
       const data = await response.json();
@@ -121,6 +128,8 @@ function HeroSection() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          nome: nome,
+          cognome: cognome,
           email: regEmail,
           password: regPassword,
           ruolo: role,
@@ -217,6 +226,21 @@ function HeroSection() {
     return (
       <div className={styles.heroSection}>
         <form onSubmit={handleRegistration}>
+          <input
+            type="nome"
+            placeholder="Nome"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            required
+          />
+          <input
+            type="cognome"
+            placeholder="Cognome"
+            value={cognome}
+            onChange={(e) => setCognome(e.target.value)}
+            required
+          />
+
           <input
             type="email"
             placeholder="Email"

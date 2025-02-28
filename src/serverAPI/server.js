@@ -30,7 +30,7 @@ client.connect()
 
 // Rotta di registrazione
 app.post('/register', async (req, res) => {
-    const { email, password, ruolo } = req.body;
+    const { nome, cognome, email, password, ruolo } = req.body;
 
     try {
         // Controlla se l'utente esiste già
@@ -44,7 +44,7 @@ app.post('/register', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         // Inserisci il nuovo utente nel database
-        await client.query('INSERT INTO "Users" ("Email", "Password_hash", "Ruolo") VALUES ($1, $2, $3) RETURNING "ID", "Email", "Ruolo" ', [email, hashedPassword, ruolo]);
+        await client.query('INSERT INTO "Users" ("Nome","Cognome","Email", "Password_hash", "Ruolo") VALUES ($1, $2, $3,$4,$5) RETURNING "ID", "Email", "Ruolo" ', [nome, cognome, email, hashedPassword, ruolo]);
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
