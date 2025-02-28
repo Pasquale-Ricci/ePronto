@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import styles from "../../modules/MenuEditorSection.module.css";
 
-function MenuEditorSection() {
+function MenuEditorSection({ changeView }) {
   const [nome, setNome] = useState("");
   const [descrizione, setDescrizione] = useState("");
   const [allergeni, setAllergeni] = useState("");
@@ -12,11 +13,14 @@ function MenuEditorSection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const codRistorante = localStorage.getItem("cod_ristorante");
+    const codRistorante = parseInt(
+      window.localStorage.getItem("Cod_ristorante")
+    );
     if (!codRistorante) {
       alert("Codice ristorante non trovato. Effettua il login.");
       return;
     }
+
     const newMenuItem = {
       nome,
       descrizione,
@@ -45,7 +49,6 @@ function MenuEditorSection() {
       console.log("Menu item created:", data);
       alert("Piatto creato con successo!");
 
-      // Pulisci i campi del form
       setNome("");
       setDescrizione("");
       setAllergeni("");
@@ -60,79 +63,108 @@ function MenuEditorSection() {
   };
 
   return (
-    <div>
-      <h2>Aggiungi un nuovo piatto al menu</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="nome">Nome del piatto: </label>
+    <div className={styles.menuFormContainer}>
+      <h2 className={styles.menuFormTitle}>Aggiungi un nuovo piatto al menu</h2>
+      <form onSubmit={handleSubmit} className={styles.menuForm}>
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="nome" className={styles.menuFormLabel}>
+            Nome del piatto:
+          </label>
           <input
             type="text"
             id="nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            className={styles.menuFormInput}
             required
           />
         </div>
-        <div>
-          <label htmlFor="descrizione">Descrizione: </label>
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="descrizione" className={styles.menuFormLabel}>
+            Descrizione:
+          </label>
           <input
             type="text"
             id="descrizione"
             value={descrizione}
             onChange={(e) => setDescrizione(e.target.value)}
+            className={styles.menuFormInput}
           />
         </div>
-        <div>
-          <label htmlFor="allergeni">Allergeni: </label>
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="allergeni" className={styles.menuFormLabel}>
+            Allergeni:
+          </label>
           <input
             type="text"
             id="allergeni"
             value={allergeni}
             onChange={(e) => setAllergeni(e.target.value)}
+            className={styles.menuFormInput}
           />
         </div>
-        <div>
-          <label htmlFor="prezzo">Prezzo: </label>
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="prezzo" className={styles.menuFormLabel}>
+            Prezzo:
+          </label>
           <input
             type="number"
             id="prezzo"
             value={prezzo}
             onChange={(e) => setPrezzo(e.target.value)}
+            className={styles.menuFormInput}
             required
           />
         </div>
-        <div>
-          <label htmlFor="tipo">Tipo di piatto: </label>
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="tipo" className={styles.menuFormLabel}>
+            Tipo di piatto:
+          </label>
           <input
             type="text"
             id="tipo"
             value={tipo}
             onChange={(e) => setTipoPiatto(e.target.value)}
+            className={styles.menuFormInput}
             required
           />
         </div>
-        <div>
-          <label htmlFor="tempo">Tempo di cottura (minuti): </label>
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="tempo" className={styles.menuFormLabel}>
+            Tempo di cottura (minuti):
+          </label>
           <input
             type="number"
             id="tempo"
             value={tempoCottura}
             onChange={(e) => setTempoCottura(e.target.value)}
+            className={styles.menuFormInput}
             required
           />
         </div>
-        <div>
-          <label htmlFor="disponibile">Disponibile: </label>
-          <input
-            type="checkbox"
-            id="disponibile"
-            checked={disponibile}
-            onChange={(e) => setDisponibile(e.target.checked)}
-          />
+        <div className={styles.menuFormGroup}>
+          <label htmlFor="disponibile" className={styles.menuFormLabel}>
+            Disponibile:
+          </label>
+          <div className={styles.menuFormToggle}>
+            <input
+              type="checkbox"
+              id="disponibile"
+              checked={disponibile}
+              onChange={(e) => setDisponibile(e.target.checked)}
+            />
+            <span className={styles.menuFormToggleSlider}></span>
+          </div>
         </div>
-        <button type="submit">Aggiungi piatto</button>
+        <button type="submit" className={styles.menuFormSubmitButton}>
+          Aggiungi piatto
+        </button>
+        <button className={styles.menuFormBackButton} onClick={changeView}>
+          Indietro
+        </button>
       </form>
     </div>
   );
 }
+
 export default MenuEditorSection;

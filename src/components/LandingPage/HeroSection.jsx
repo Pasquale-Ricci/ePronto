@@ -51,7 +51,7 @@ function HeroSection() {
         window.localStorage.setItem("token", data.token);
         window.localStorage.setItem("ruolo", data.ruolo);
         window.localStorage.setItem("ID", data.ID);
-
+        window.localStorage.setItem("Cod_ristorante", data.cod_ristorante);
         if (data.firstLogin && data.ruolo === "proprietario") {
           setFirstLogin(true);
         } else {

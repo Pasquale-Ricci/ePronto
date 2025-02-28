@@ -4,22 +4,22 @@ import AlertSection from "../components/ManagerPage/AlertSection";
 import StaffSection from "../components/ManagerPage/StaffSection";
 import MenuSection from "../components/ManagerPage/MenuSection";
 import ReportSection from "../components/ManagerPage/ReportSection";
-import MenuEditorSection from "../components/ManagerPage/MenuEditorSection"; // Importa il nuovo componente
+import MenuEditorSection from "../components/ManagerPage/MenuEditorSection";
 import { useState } from "react";
 
 function ManagerPage() {
-  const [view, setView] = useState(false);
-  const [showMenuEditor, setShowMenuEditor] = useState(false); // Stato per gestire la visualizzazione del form
+  const [view, setView] = useState("main");
+  const [showMenuEditor, setShowMenuEditor] = useState(false);
 
-  function changeView() {
-    setView((v) => !v);
+  function changeView(newView) {
+    setView(newView);
   }
 
   function toggleMenuEditor() {
-    setShowMenuEditor((prev) => !prev); // Alterna la visualizzazione del form
+    setShowMenuEditor((prev) => !prev);
   }
 
-  if (!view) {
+  if (view === "main") {
     return (
       <>
         <Header />
@@ -28,15 +28,14 @@ function ManagerPage() {
             <MenuSection />
             <div>
               <h2>Accedi ai tuoi reports</h2>
-              <button onClick={changeView}>Reports</button>
+              <button onClick={() => changeView("reports")}>Reports</button>
             </div>
             <div>
               <h2>Gestisci il menu</h2>
-              <button onClick={toggleMenuEditor}>
+              <button onClick={() => changeView("menuEditor")}>
                 {showMenuEditor ? "Nascondi Editor" : "Crea Nuovo Menu"}
               </button>
-              {showMenuEditor && <MenuEditorSection />}{" "}
-              {/* Mostra il form solo se showMenuEditor è true */}
+              {showMenuEditor && <MenuEditorSection />}
             </div>
           </div>
 
@@ -47,8 +46,11 @@ function ManagerPage() {
         </div>
       </>
     );
+  } else if (view === "reports") {
+    return <ReportSection changeView={() => changeView("main")} />;
+  } else if (view === "menuEditor") {
+    return <MenuEditorSection changeView={() => changeView("main")} />;
   }
-  return <ReportSection changeView={changeView} />;
 }
 
 export default ManagerPage;

@@ -288,20 +288,26 @@ app.post('/menu_order', async (req, res) => {
 
 //Rotta per creare il menu
 app.post('/create_menu', async (req, res) => {
-    const { nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura,Disponibile, Cod_ristorante} = req.body;
+    const { nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, Cod_ristorante } = req.body;
     
-    //console.log("Dati ricevuti:", { nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, Cod_ristorante });
+    console.log("Dati ricevuti:", req.body); // LOG PER DEBUG
+
+    if (!Cod_ristorante || isNaN(Cod_ristorante)) {
+        return res.status(400).json({ error: "Cod_ristorante non valido" });
+    }
+
     try {
         await client.query(
             'INSERT INTO "Menu" ("Nome", "Descrizione", "Allergeni", "Prezzo", "Tipo_piatto", "Tempo_cottura", "Disponibile", "Cod_ristorante") VALUES ($1, $2, $3, $4, $5, $6, $7, $8)',
-            [nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, Cod_ristorante]
+            [nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, parseInt(Cod_ristorante)]
         );
-        res.json({ message: 'Menu  added successfully' });
+        res.json({ message: 'Menu added successfully' });
     } catch (error) {   
         console.error('Error adding menu:', error);
         res.status(500).json({ error: 'Internal server error' });   
     }
 });
+
 
 // Rotta per ottenere gli ordini completati
 app.get('/completed_orders', async (req, res) => {
