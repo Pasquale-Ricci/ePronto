@@ -1,26 +1,142 @@
-/* Contenitore principale */
-.menuFormContainer {
-    max-width: 600px;
-    margin: 0 auto;
+.menuEditorContainer {
+    margin-top: 100px;
+    display: flex;
+    gap: 20px;
     padding: 20px;
-    background-color: var(--background-dark);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    color: var(--text-light);
-    text-align: center;
-}
-
-/* Titolo */
-.menuFormTitle {
+    background-color: #a3a3a324;
+    min-height: 100vh;
+  }
+  
+  .menuForm {
+    flex: 1;
+    max-width: 50%;
+    background-color: #eeeeee24;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .menuSection {
+    flex: 1;
+    max-width: 50%;
+    background-color: #f6f4f4;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .menuContainer {
+    background-color: #ffffff24;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #000000; /* Testo chiaro */
+  }
+  
+  .menuList {
+    list-style-type: none; /* Rimuove i pallini della lista */
+    padding: 0;
+  }
+  
+  .menuList li {
+    padding: 10px;
+    border-bottom: 1px solid #a5a5a582; /* Linea divisoria */
+  }
+  
+  .menuList li:last-child {
+    border-bottom: none; /* Rimuove la linea dall'ultimo elemento */
+  }
+  
+  .menuFormTitle {
     font-size: 26px;
     margin-bottom: 20px;
     font-weight: bold;
-    color: var(--text-light);
-}
-
-/* Bottoni */
-.menuFormBackButton,
-.menuFormSubmitButton {
+    color: #ecf0f1; /* Testo chiaro */
+  }
+  
+  .menuFormGroup {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 15px;
+  }
+  
+  .menuFormLabel {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #ecf0f1; /* Testo chiaro */
+    text-align: left;
+  }
+  
+  .menuFormInput {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #591010;
+    border-radius: 5px;
+    background-color: #f17979;
+    color: #ecf0f1; /* Testo chiaro */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .menuFormInput:focus {
+    border-color: #b6b6b6; /* Colore del bordo quando in focus */
+    background-color: #af7979;
+    outline: none;
+  }
+  
+  .menuFormToggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .menuFormToggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .menuFormToggleSlider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #a05c5c;
+    border: 2px solid #ff0c0c7d;
+    border-radius: 34px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  .menuFormToggleSlider::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: #f6f6f6;
+    border-radius: 50%;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .menuFormToggle input:checked + .menuFormToggleSlider {
+    background-color: #64d970;
+    border-color: #074813;
+  }
+  
+  .menuFormToggle input:checked + .menuFormToggleSlider::before {
+    background-color: #fff;
+    transform: translateX(26px);
+  }
+  
+  .menuFormSubmitButton,
+  .menuFormBackButton {
     display: inline-block;
     width: 100%;
     max-width: 300px;
@@ -29,157 +145,26 @@
     font-weight: bold;
     text-align: center;
     border: none;
-    border-radius: var(--border-radius);
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 15px;
-}
-
-.menuFormBackButton {
-    background-color: hsl(0, 57%, 61%);
-    border: none;
-    width: 150px;
-    height: 50px;
-    border-radius: 5px;
-    color: black;
-    cursor: pointer;
-    font-size: 1em;
-    margin-top: 0%;
-    margin-left: 3%;
-    padding: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.menuFormBackButton:hover {
-    background-color: var(--primary-hover);
-}
-
-.menuFormSubmitButton {
-    background-color: hsl(0, 57%, 61%);
-    border: none;
-    width: 150px;
-    height: 50px;
-    border-radius: 5px;
-    color: black;
-    cursor: pointer;
-    font-size: 1em;
-    margin-top: 5%;
-    margin-left: 3%;
-    padding: 5px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.menuFormSubmitButton:hover {
-    background-color: var(--success-hover);
-}
-
-/* Form */
-.menuForm {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
-}
-
-/* Gruppi di input */
-.menuFormGroup {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-}
-
-/* Etichette */
-.menuFormLabel {
-    font-size: 16px;
-    margin-bottom: 5px;
-    font-weight: 500;
-    color: var(--text-light);
-    text-align: left;
-}
-
-/* Input */
-.menuFormInput {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid var(--input-border);
-    border-radius: var(--border-radius);
-    background-color: hsl(0, 57%, 61%);
-    color: var(--text-light);
-    transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.menuFormInput:focus {
-    border-color: var(--primary-color);
-    background-color: var(--background-dark);
-    outline: none;
-}
-
-/* Contenitore del toggle switch */
-.menuFormToggle {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-/* Input nascosto */
-.menuFormToggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* Contenitore del toggle switch */
-.menuFormToggle {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-/* Input nascosto */
-.menuFormToggle input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* Slider (lo sfondo del toggle) */
-.menuFormToggleSlider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: white; /* Colore di default */
-    border: 2px solid  hsl(0, 57%, 61%); /* Bordo blu */
-    border-radius: 34px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-/* Pallino del toggle */
-.menuFormToggleSlider::before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color:  hsl(0, 57%, 61%); /* Colore blu */
-    border-radius: 50%;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-}
-
-/* Quando il toggle è attivo */
-.menuFormToggle input:checked + .menuFormToggleSlider {
-    background-color: rgb(0, 128, 62); /* Sfondo blu */
-    border-color: rgb(0, 128, 62); /* Bordo blu */
-}
-
-.menuFormToggle input:checked + .menuFormToggleSlider::before {
-    background-color: white; /* Pallino bianco */
-    transform: translateX(26px); /* Sposta il pallino a destra */
-}
+  }
+  
+  .menuFormSubmitButton {
+    background-color: #db3434a7;
+    color: #fff;
+  }
+  
+  .menuFormBackButton {
+    background-color: #e8e8e83c;
+    color: #fff;
+  }
+  
+  .menuFormSubmitButton:hover {
+    background-color: #d4b2b2;
+  }
+  
+  .menuFormBackButton:hover {
+    background-color: #c0392b;
+  }

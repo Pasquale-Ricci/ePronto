@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import styles from '../../modules/ManagerPage.module.css';
 
 function StaffSection() {
     const [staff, setStaff] = useState([]); // Stato per memorizzare la lista del personale
@@ -87,16 +88,19 @@ function StaffSection() {
         fetchStaff();
     }, []); // Esegui solo al montaggio del componente
 
-    console.log(staff);
 
     return (
         <div>
             <h2>Personale</h2>
             <ul>
                 {staff.map((staffMember, index) => (
-                    <li key={index}>
-                        {staffMember.Nome} {staffMember.Cognome}
-                        <button onClick={() => removeStaff(staffMember.ID)}>
+                    <li 
+                    className={styles.staffContainer}
+                    key={index}>
+                        <p className={styles.staffName}>{staffMember.Nome} {staffMember.Cognome}</p>
+                        <button 
+                        className={styles.removeStaffBtn}
+                        onClick={() => removeStaff(staffMember.ID)}>
                             <FontAwesomeIcon icon={faTrash} />
                         </button>
                     </li>
@@ -109,7 +113,9 @@ function StaffSection() {
                 type="text"
                 placeholder="Inserisci il codice del dipendente"
             />
-            <button onClick={handleAddStaff}>Aggiungi Dipendente</button>
+            <button 
+            className={styles.managerBtn}
+            onClick={handleAddStaff}>Aggiungi Dipendente</button>
         </div>
     );
 }

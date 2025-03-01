@@ -1,28 +1,42 @@
 .sectionsContainer {
-    margin-top: 15%;
+    margin-top: 10%;
+    margin-left: 10%;
+    height: 100%;
+    width: 80%; /* Riduci la larghezza per evitare overflow */
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
+    gap: 20px; /* Aggiunge spazio tra i bottoni */
 }
 
 .section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100%;
-    width: 100%;
+    justify-content: center;
+    text-align: center;
 }
 
-button {
+.orderBtn {
+    color: rgba(174, 25, 25, 0.759);
     margin-top: 20px;
     border: none;
-    border-radius: 5px;
+    border-radius: 15px; /* Bordi più arrotondati */
     background-color: #f0f0f0;
     cursor: pointer;
-    width: 80%; 
-    height: 100px; 
-    padding: 10px 20px; 
-    font-size: 40px;
+    height: 400px; /* Altezza aumentata */
+    width: 400px; /* Larghezza aumentata */
+    font-size: 50px; /* Font più grande */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Effetto hover */
 }
 
+.orderBtn:hover {
+    transform: scale(1.05); /* Ingrandisce leggermente il bottone */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Aumenta l'ombra */
+}

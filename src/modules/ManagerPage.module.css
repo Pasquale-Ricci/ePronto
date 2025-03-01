@@ -55,16 +55,50 @@
     font-size: 24px;
 }
 
-button {
-    background-color: hsl(0, 46%, 61%);
+.removeStaffBtn{
+    font-size: 16px;
+    width: 10%;
     padding: 10px;
-    border: none;
-    border-radius: 3px;
+    margin-bottom: 10px;
+    height: 10%;
     cursor: pointer;
+    border: 2px solid white;
+    border-radius: 0px;
+    background: linear-gradient(90deg, hsla(0, 84%, 56%, 0.692), hsla(0, 0%, 80%, 0.692));
+
 }
 
-button:hover {
-    background-color: hsl(0, 46%, 51%);
+.managerBtn {
+    font-size: 24px;
+    width: 100%;
+    padding: 10px;
+    height: 15%;
+    cursor: pointer;
+    border: 2px solid white;
+    border-radius: 0px;
+    background: linear-gradient(90deg, hsla(0, 100%, 56%, 0.761), hsla(0, 0%, 97%, 0.692));
+    background-size: 150% 50%; /* Estende il gradiente oltre la larghezza del bottone */
+    background-position: left; 
+    transition: background-position 1s ease;
+}
+
+.managerBtn:hover {
+    background-position: right; /* Sposta il gradiente a destra durante l'hover */
+}
+
+.staffContainer{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: linear-gradient(90deg, hsla(0, 84%, 56%, 0.692), hsla(0, 0%, 80%, 0.692));
+    border: 2px solid white;
+    height: 0%;
+    padding: 0px;
+}
+
+.staffName{
+    font-size: 24px;
+    font-weight: bold;
 }
 
 h2 {
@@ -75,3 +109,7 @@ h3 {
     color: rgb(128, 76, 76);
 }
 
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}

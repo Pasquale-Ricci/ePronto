@@ -28,11 +28,15 @@ function ManagerPage() {
             <MenuSection />
             <div>
               <h2>Accedi ai tuoi reports</h2>
-              <button onClick={() => changeView("reports")}>Reports</button>
+              <button
+              className={style.managerBtn}
+              onClick={() => changeView("reports")}>Reports</button>
             </div>
             <div>
               <h2>Gestisci il menu</h2>
-              <button onClick={() => changeView("menuEditor")}>
+              <button
+              className={style.managerBtn} 
+              onClick={() => changeView("menuEditor")}>
                 {showMenuEditor ? "Nascondi Editor" : "Crea Nuovo Menu"}
               </button>
               {showMenuEditor && <MenuEditorSection />}

@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import MenuEditorSection from "./MenuEditorSection";
 
-function MenuSection() {
+function MenuSection({ style }) {
   const [menu, setMenu] = useState([]);
 
   async function fetchMenu() {
@@ -11,7 +10,7 @@ function MenuSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cod_ristorante: 1 }),
+        body: JSON.stringify({ cod_ristorante: localStorage.getItem("cod_ristorante") }),
       });
 
       if (!response.ok) {
@@ -19,7 +18,7 @@ function MenuSection() {
       }
 
       const data = await response.json();
-      return Array.isArray(data) ? data : []; // Assicurati che data sia un array
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error("Error fetching menu:", error);
       return [];
@@ -56,9 +55,9 @@ function MenuSection() {
   }
 
   return (
-    <div>
+    <div className={style ? style.menuContainer : ""}>
       <h2>Menu Corrente</h2>
-      <ul>{menuItems}</ul>
+      <ul className={style ? style.menuList : ""}>{menuItems}</ul>
     </div>
   );
 }

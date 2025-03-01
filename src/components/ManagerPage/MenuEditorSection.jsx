@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "../../modules/MenuEditorSection.module.css";
+import MenuSection from '../ManagerPage/MenuSection';
 
 function MenuEditorSection({ changeView }) {
   const [nome, setNome] = useState("");
@@ -45,7 +46,6 @@ function MenuEditorSection({ changeView }) {
       }
 
       const data = await response.json();
-      console.log("Menu item created:", data);
       alert("Piatto creato con successo!");
 
       setNome("");
@@ -62,9 +62,10 @@ function MenuEditorSection({ changeView }) {
   };
 
   return (
-    <div className={styles.menuFormContainer}>
-      <h2 className={styles.menuFormTitle}>Aggiungi un nuovo piatto al menu</h2>
+    <div className={styles.menuEditorContainer}>
+      {/* Form per aggiungere un nuovo piatto */}
       <form onSubmit={handleSubmit} className={styles.menuForm}>
+        <h2 className={styles.menuFormTitle}>Aggiungi un nuovo piatto al menu</h2>
         <div className={styles.menuFormGroup}>
           <label htmlFor="nome" className={styles.menuFormLabel}>
             Nome del piatto:
@@ -162,6 +163,14 @@ function MenuEditorSection({ changeView }) {
           Indietro
         </button>
       </form>
+
+      {/* Menu corrente */}
+      <div className={styles.menuSection}>
+        <MenuSection style={{
+          menuContainer: styles.menuContainer,
+          menuList: styles.menuList,
+        }} />
+      </div>
     </div>
   );
 }

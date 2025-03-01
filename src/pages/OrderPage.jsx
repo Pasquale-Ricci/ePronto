@@ -8,22 +8,15 @@ import PayementSection from "../components/OrderPage/PaymentSection";
 import TablesSection from "../components/OrderPage/TablesSection";
 
 function OrderPage() {
-
     const [view, setView] = useState("");
 
     switch (view) {
         case "order":
-            return (
-                <OrderSection />
-            )
+            return <OrderSection />;
         case "payment":
-            return (
-                <PayementSection />
-            )
+            return <PayementSection />;
         case "tables":
-            return (
-                <TablesSection />
-            )
+            return <TablesSection />;
         default:
             return (
                 <>
@@ -31,19 +24,25 @@ function OrderPage() {
                     <div className={styles.sectionsContainer}>
                         <div className={styles.section}>
                             <h2>Ordina</h2>
-                            <button onClick={() => setView("order")}><FontAwesomeIcon icon={faCartPlus} /></button>
+                            <button onClick={() => setView("order")} className={styles.orderBtn}>
+                                <FontAwesomeIcon icon={faCartPlus} />
+                            </button>
                         </div>
                         <div className={styles.section}>
                             <h2>Paga</h2>
-                            <button onClick={() => setView("payment")}><FontAwesomeIcon icon={faCashRegister} /></button>
+                            <button onClick={() => setView("payment")} className={styles.orderBtn}>
+                                <FontAwesomeIcon icon={faCashRegister} />
+                            </button>
                         </div>
                         <div className={styles.section}>
                             <h2>Visualizza i tavoli</h2>
-                            <button onClick={() => setView("tables")}><FontAwesomeIcon icon={faChair} /></button>
+                            <button onClick={() => setView("tables")} className={styles.orderBtn}>
+                                <FontAwesomeIcon icon={faChair} />
+                            </button>
                         </div>
                     </div>
                 </>
-            )
+            );
     }
 }
 
