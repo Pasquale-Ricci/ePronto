@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "../../modules/MenuEditorSection.module.css";
-import MenuSection from '../ManagerPage/MenuSection';
+import MenuSection from "../ManagerPage/MenuSection";
 
 function MenuEditorSection({ changeView }) {
   const [nome, setNome] = useState("");
@@ -10,6 +10,26 @@ function MenuEditorSection({ changeView }) {
   const [tipo, setTipoPiatto] = useState("");
   const [tempoCottura, setTempoCottura] = useState("");
   const [disponibile, setDisponibile] = useState(true);
+  const [menuUpdated, setMenuUpdated] = useState(false); // Aggiunto per aggiornare il menu
+  const [customTipo, setCustomTipo] = useState("false");
+  const tipiPiattoPredefiniti = [
+    "Antipasto",
+    "Primo",
+    "Secondo",
+    "Dolce",
+    "Altro",
+  ];
+
+  const handleTipoChange = (e) => {
+    const value = e.target.value;
+    if (value === "Altro") {
+      setCustomTipo(true);
+      setTipoPiatto("");
+    } else {
+      setCustomTipo(false);
+      setTipoPiatto(value);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,9 +65,9 @@ function MenuEditorSection({ changeView }) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();
       alert("Piatto creato con successo!");
 
+      // Reset campi
       setNome("");
       setDescrizione("");
       setAllergeni("");
@@ -55,6 +75,9 @@ function MenuEditorSection({ changeView }) {
       setTipoPiatto("");
       setTempoCottura("");
       setDisponibile(true);
+
+      // Attiva aggiornamento menu
+      setMenuUpdated((prev) => !prev);
     } catch (error) {
       console.error("Error creating menu item:", error);
       alert("Errore durante la creazione del piatto.");
@@ -63,9 +86,10 @@ function MenuEditorSection({ changeView }) {
 
   return (
     <div className={styles.menuEditorContainer}>
-      {/* Form per aggiungere un nuovo piatto */}
       <form onSubmit={handleSubmit} className={styles.menuForm}>
-        <h2 className={styles.menuFormTitle}>Aggiungi un nuovo piatto al menu</h2>
+        <h2 className={styles.menuFormTitle}>
+          Aggiungi un nuovo piatto al menu
+        </h2>
         <div className={styles.menuFormGroup}>
           <label htmlFor="nome" className={styles.menuFormLabel}>
             Nome del piatto:
@@ -120,14 +144,31 @@ function MenuEditorSection({ changeView }) {
           <label htmlFor="tipo" className={styles.menuFormLabel}>
             Tipo di piatto:
           </label>
-          <input
-            type="text"
-            id="tipo"
-            value={tipo}
-            onChange={(e) => setTipoPiatto(e.target.value)}
-            className={styles.menuFormInput}
-            required
-          />
+          <div className={styles.menuFormInputContainer}>
+            <select
+              id="tipo-select"
+              value={customTipo ? "Altro" : tipo}
+              onChange={handleTipoChange}
+              className={styles.menuFormInput}
+            >
+              <option value="">Seleziona un tipo</option>
+              {tipiPiattoPredefiniti.map((tipoPiatto, index) => (
+                <option key={index} value={tipoPiatto}>
+                  {tipoPiatto}
+                </option>
+              ))}
+            </select>
+            {customTipo && (
+              <input
+                type="text"
+                id="tipo"
+                value={tipo}
+                onChange={(e) => setTipoPiatto(e.target.value)}
+                className={styles.menuFormInput}
+                placeholder="Scrivi il tipo di piatto"
+              />
+            )}
+          </div>
         </div>
         <div className={styles.menuFormGroup}>
           <label htmlFor="tempo" className={styles.menuFormLabel}>
@@ -166,10 +207,13 @@ function MenuEditorSection({ changeView }) {
 
       {/* Menu corrente */}
       <div className={styles.menuSection}>
-        <MenuSection style={{
-          menuContainer: styles.menuContainer,
-          menuList: styles.menuList,
-        }} />
+        <MenuSection
+          style={{
+            menuContainer: styles.menuContainer,
+            menuList: styles.menuList,
+          }}
+          menuUpdated={menuUpdated}
+        />
       </div>
     </div>
   );

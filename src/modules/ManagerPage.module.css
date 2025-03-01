@@ -1,7 +1,6 @@
 .sectionsContainer {
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
     margin: 8%;
     background: linear-gradient(90deg, rgb(255, 148, 148) 0%, rgb(255, 255, 255) 100%);
     padding: 50px;
@@ -9,7 +8,7 @@
     position: relative;
 }
 
-.sectionColumn {
+.sectionColumn {    
     display: flex;
     flex-direction: column;
 }
@@ -67,12 +66,15 @@
     background: linear-gradient(90deg, hsla(0, 84%, 56%, 0.692), hsla(0, 0%, 80%, 0.692));
 
 }
-
+.staffRole{
+    font-size: 20px;
+    font-style: italic;
+    
+}
 .managerBtn {
     font-size: 24px;
     width: 100%;
     padding: 10px;
-    height: 15%;
     cursor: pointer;
     border: 2px solid white;
     border-radius: 0px;

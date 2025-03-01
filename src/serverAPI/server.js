@@ -272,6 +272,32 @@ app.post('/menu', async (req, res) => {
     }
 });
 
+app.put('/menu_update', async (req, res) => {
+    const { Cod_menu, Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura } = req.body;
+
+    try {
+        const result = await client.query(
+            `UPDATE "Menu" 
+            SET "Nome" = $1, "Descrizione" = $2, "Allergeni" = $3, "Prezzo" = $4, "Tipo_piatto" = $5, "Tempo_cottura" = $6 
+            WHERE "Cod_menu" = $7 
+            RETURNING *`,
+            [Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura, Cod_menu]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Elemento del menu non trovato" });
+        }
+
+        res.json({ message: "Menu aggiornato con successo", menu: result.rows[0] });
+    } catch (error) {
+        console.error("Errore aggiornamento menu:", error);
+        res.status(500).json({ error: "Errore del server" });
+    }
+});
+
+
+
+
 // Rotta per il report degli ordini
 app.post('/orderReport', async (req, res) => {
     try {

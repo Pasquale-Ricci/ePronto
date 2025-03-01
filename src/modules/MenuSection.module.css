@@ -2,37 +2,30 @@
   margin-top: 100px;
   display: flex;
   height: 100%;
-  gap: 10px; /* Riduci lo spazio tra i contenitori */
+  gap: 20px; /* Spazio tra i due riquadri */
   padding: 20px;
   background-color: #a3a3a324;
   min-height: 100vh;
 }
 
-.menuForm {
-  flex: 1;
-  max-width: 50%;
-  background-color: #eeeeee24;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
+.menuForm,
 .menuSection {
-  height: 100%;
-  max-width: 70%; /* Aumenta la larghezza massima */
-  background-color: #f6f4f4;
-  padding: 25px; /* Aumenta il padding */
+  flex: 1; /* Entrambi i riquadri occupano lo stesso spazio */
+  background-color: #f6f4f4; /* Colore di sfondo uniforme */
+  padding: 25px; /* Padding uniforme */
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombra uniforme */
 }
 
 .menuContainer {
-  background-color: #ffffff24;
-  padding: 30px; /* Aumenta il padding */
-  height: 400px; /* Aumenta l'altezza */
+  background-color: #ffffff;
+  max-height: 500px; /* Altezza massima */
+  padding: 20px;
+  height: auto; /* Altezza automatica */
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: #000000; /* Testo chiaro */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: #000000; /* Testo scuro */
+  overflow-y: auto; /* Aggiunge lo slider verticale */
 }
 
 .menuList {
@@ -53,7 +46,7 @@
   font-size: 26px;
   margin-bottom: 20px;
   font-weight: bold;
-  color: #ecf0f1; /* Testo chiaro */
+  color: #000000; /* Testo scuro */
 }
 
 .menuFormGroup {
@@ -68,7 +61,7 @@
   font-size: 16px;
   margin-bottom: 5px;
   font-weight: 500;
-  color: #ecf0f1; /* Testo chiaro */
+  color: #000000; /* Testo scuro */
   text-align: left;
 }
 
@@ -78,14 +71,14 @@
   font-size: 16px;
   border: 2px solid #591010;
   border-radius: 5px;
-  background-color: #f17979;
-  color: #ecf0f1; /* Testo chiaro */
+  background-color: #ffffff;
+  color: #000000; /* Testo scuro */
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .menuFormInput:focus {
   border-color: #b6b6b6; /* Colore del bordo quando in focus */
-  background-color: #af7979;
+  background-color: #ffffff;
   outline: none;
 }
 
