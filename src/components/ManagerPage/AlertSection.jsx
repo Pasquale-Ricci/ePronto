@@ -1,9 +1,3 @@
-/*
-Gli alert riscontrabili sono
-ALERT BEVERAGE
-ALERT TEMPO DI ATTESA
-*/
-
 import React, { useEffect, useState } from "react";
 import styles from "../../modules/AlertSection.module.css";
 function AlertSection() {
@@ -17,6 +11,9 @@ function AlertSection() {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          cod_ristorante: localStorage.getItem("cod_ristorante"),
+        }),
       });
 
       if (!response.ok) {
@@ -59,16 +56,6 @@ function AlertSection() {
           {alerts.beverage.map((item, index) => (
             <li key={index} className={styles.alertItem}>
               {item.Nome}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles.alertSection}>
-        <h3>Ordini in ritardo</h3>
-        <ul className={styles.alertList}>
-          {alerts.ordini.map((ordine, index) => (
-            <li key={index} className={styles.alertItem}>
-              Order {ordine.Cod_ordine}
             </li>
           ))}
         </ul>

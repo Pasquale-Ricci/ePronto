@@ -149,26 +149,16 @@ app.post('/register-restaurant', async (req, res) => {
 
 // Rotta degli alert
 app.post('/alerts', async (req, res) => {
+    const {cod_ristorante} = req.body;
     try {
         // Alerts sul beverage
         const beverage = await client.query(
-            'SELECT "Nome" FROM "Beverage" WHERE "Quantita" <= "Quantita_critica";'
+            'SELECT "Nome" FROM "Beverage" WHERE "Quantita" <= "Quantita_critica" AND "Cod_ristorante" = $1;',
+            [cod_ristorante]
         );
-
-        // Alerts sul tempo di attesa
-        //Conversione del datatype Interval in tempo attesa in minuti per poter essere 
-        //filtrato successivamente
-        const ordini = await client.query(
-            `SELECT "Cod_ordine", "Totale", "Note_ordine", "Cod_tavolo", "Ora", 
-            EXTRACT(EPOCH FROM (NOW() - "Ora")) / 60 AS "tempo_attesa_minuti" 
-            FROM "Ordine";`
-        );
-
-        const ordiniFiltrati = ordini.rows.filter(ordine => ordine.tempo_attesa_minuti > 20);
-
         const alerts = {
             beverage: beverage.rows,
-            ordini: ordiniFiltrati
+            
         };
 
         res.json(alerts);
