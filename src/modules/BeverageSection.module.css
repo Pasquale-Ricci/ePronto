@@ -1,30 +1,28 @@
-/* Contenitore principale */
 .beverageContainer {
-  padding: 40px 20px 20px; /* Aumentato il padding superiore a 40px */
+  padding: 40px 20px 20px;
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   max-width: 800px;
-  margin: 50px auto 0; /* Aggiunto margine superiore di 50px */
+  margin: 50px auto 0;
 }
 
-/* Header con titolo e bottone indietro */
 .beverageHeader {
   display: flex;
-  justify-content: space-between; /* Allinea il titolo al centro e il bottone a destra */
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  position: relative; /* Necessario per centrare il titolo */
+  position: relative;
 }
 
 .beverageTitle {
   font-size: 24px;
   font-weight: bold;
   color: #333;
-  position: absolute; /* Posiziona il titolo in modo assoluto */
-  left: 50%; /* Centra orizzontalmente */
-  transform: translateX(-50%); /* Centra orizzontalmente */
-  top: 10px; /* Sposta il titolo leggermente più in basso */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 10px;
 }
 
 .backButton {
@@ -36,21 +34,19 @@
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s ease;
-  margin-left: auto; /* Spinge il bottone a destra */
-  margin-top: 25px; /* Sposta il bottone leggermente più in basso */
+  margin-left: auto;
+  margin-top: 25px;
 }
 
 .backButton:hover {
   background-color: #0056b3;
 }
 
-/* Lista delle bevande */
 .beverageList {
   list-style-type: none;
   padding: 0;
 }
 
-/* Singolo elemento della lista */
 .beverageItem {
   margin-bottom: 20px;
   padding: 15px;
@@ -64,7 +60,6 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Dettagli della bevanda */
 .beverageItem strong {
   font-size: 18px;
   color: #333;
@@ -81,7 +76,6 @@
   color: #777;
 }
 
-/* Bottoni di modifica e salvataggio */
 .beverageSave, .beverageChange {
   margin-left: 10px;
   padding: 5px 10px;
@@ -110,7 +104,6 @@
   background-color: #e0a800;
 }
 
-/* Input fields */
 .beverageItem input {
   display: block;
   width: 100%;

@@ -205,6 +205,9 @@ function OrderSection() {
       const { cod_ordine } = await response.json();
 
       // Inserisci i piatti ordinati nella tabella Menu_ordine
+      //In Object Keys si trova cod_menu dall'oggetto order
+      //Per ogni codice menu viene eseguito il fetch e vengono inseriti i
+      //piatti nella tabella Menu_ordine
       await Promise.all(
         Object.keys(order).map(async (cod_menu) => {
           await fetch("http://localhost:3000/menu_order", {

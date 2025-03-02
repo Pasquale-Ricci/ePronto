@@ -39,11 +39,11 @@
 }
 
 .available {
-    background-color: #d4edda; /* Verde chiaro */
+    background-color: #d4edda;
 }
 
 .unavailable {
-    background-color: #f8d7da; /* Rosso chiaro */
+    background-color: #f8d7da;
 }
 
 .table button {

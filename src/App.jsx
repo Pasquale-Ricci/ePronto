@@ -13,6 +13,8 @@ import feature1 from "./assets/PiattoFeature2.jpg";
 import feature2 from "./assets/StaffFeature2.png";
 import feature3 from "./assets/MenuFeature3.png";
 
+//In questa pagina viene gestito l'inizio della pagina e il routing tramite il modulo react-router
+
 function App() {
   return (
     <>

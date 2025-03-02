@@ -29,6 +29,7 @@ function Notification() {
         }
     }
 
+
     async function markAsRead(notificationId) {
         try {
             const token = localStorage.getItem('token');
@@ -54,15 +55,13 @@ function Notification() {
         }
     }
 
+    //Ogni volta che viene aggiornata la lista delle notifiche vengono rirenderizzate
     useEffect(() => {
         getNotifications();
     }, [notifications]);
 
-    useEffect(() => {
-    }, [notifications]);
 
     const unreadCount = notifications.filter(notification => !notification.Letto).length;
-
     const hasNotifications = notifications.length > 0;
 
     const sortedNotifications = [...notifications].sort((a, b) => {

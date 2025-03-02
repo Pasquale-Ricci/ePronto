@@ -13,7 +13,7 @@ function PayementSection() {
 
     // Funzione per recuperare i tavoli
     async function getTables() {
-        const cod_ristorante = localStorage.getItem('cod_ristorante'); // Recupera il codice del ristorante
+        const cod_ristorante = localStorage.getItem('cod_ristorante');
         if (!cod_ristorante) {
             console.error('Codice ristorante non trovato nel localStorage');
             return;
@@ -21,11 +21,11 @@ function PayementSection() {
 
         try {
             const response = await fetch('http://localhost:3000/tables', {
-                method: 'POST', // Usa POST per inviare il corpo della richiesta
+                method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ cod_ristorante }) // Invia cod_ristorante nel corpo
+                body: JSON.stringify({ cod_ristorante })
             });
 
             if (!response.ok) {
@@ -33,11 +33,12 @@ function PayementSection() {
             }
 
             const data = await response.json();
-            setTables(data.sort((a, b) => a.Cod_tavolo - b.Cod_tavolo)); // Ordina i tavoli
+            setTables(data.sort((a, b) => a.Cod_tavolo - b.Cod_tavolo));
         } catch (error) {
             console.error('Error fetching tables:', error);
         }
     }
+
 
     // Funzione per recuperare tutti gli ordini completati
     async function getOrders() {
@@ -87,6 +88,7 @@ function PayementSection() {
         }
     }
 
+    
     // Funzione per rendere di nuovo disponibile il tavolo dopo che sono stati completati tutti i pagamenti
     async function freeTable(tableId) {
         try {
@@ -170,7 +172,7 @@ function PayementSection() {
                     ) : (
                         <ul>
                             {filteredOrders.map((order) => {
-                                // Assicurati che order.Totale sia un numero
+                                // Verifica che totale sia un numero
                                 const totale = typeof order.Totale === 'number' ? order.Totale : parseFloat(order.Totale);
 
                                 return (

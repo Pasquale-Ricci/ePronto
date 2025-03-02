@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import style from "../../modules/ManagerTable.module.css";
 
 function ManagerTable({ changeView }) {
-  // Aggiungi changeView come prop
+  // Viene passato changeView nei prop per poter tornare indietro alla Manager Page
   const [tables, setTables] = useState([]);
   const [newTable, setNewTable] = useState({ posti: "" });
 
@@ -37,6 +37,7 @@ function ManagerTable({ changeView }) {
     }
   }
 
+
   async function addTable() {
     try {
       const response = await fetch("http://localhost:3000/add_table", {
@@ -63,6 +64,7 @@ function ManagerTable({ changeView }) {
     }
   }
 
+  
   async function removeTable(tableId) {
     try {
       const response = await fetch("http://localhost:3000/remove_table", {

@@ -1,50 +1,49 @@
 .positiveMsg {
-    background-color: #4CAF50; /* Verde per feedback positivo */
+    background-color: #4CAF50;
     color: white;
     padding: 15px 25px;
     border-radius: 8px;
-    position: fixed; /* Posizionamento fisso */
-    top: 20px; /* Posizione in alto */
-    left: 50%; /* Centrato orizzontalmente */
-    transform: translateX(-50%); /* Centra esattamente */
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1005; /* Sopra tutti gli altri elementi */
-    animation: fadeIn 0.5s, fadeOut 0.5s 3.5s; /* Animazioni di ingresso e uscita */
+    z-index: 1005;
+    animation: fadeIn 0.5s, fadeOut 0.5s 3.5s;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
   .negativeMsg {
-    background-color: #F44336; /* Rosso per feedback negativo */
+    background-color: #F44336;
     color: white;
     padding: 15px 25px;
     border-radius: 8px;
-    position: fixed; /* Posizionamento fisso */
-    top: 20px; /* Posizione in alto */
-    left: 50%; /* Centrato orizzontalmente */
-    transform: translateX(-50%); /* Centra esattamente */
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Sopra tutti gli altri elementi */
-    animation: fadeIn 0.5s, fadeOut 0.5s 3.5s; /* Animazioni di ingresso e uscita */
+    z-index: 1000;
+    animation: fadeIn 0.5s, fadeOut 0.5s 3.5s;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
   .msg {
-    margin: 0; /* Rimuove il margine predefinito del paragrafo */
+    margin: 0;
     font-size: 16px;
     font-weight: 500;
   }
   
-  /* Animazioni */
   @keyframes fadeIn {
-    from { opacity: 0; transform: translate(-50%, -20px); } /* Centrato e scorre dall'alto */
+    from { opacity: 0; transform: translate(-50%, -20px); }
     to { opacity: 1; transform: translate(-50%, 0); }
   }
   
   @keyframes fadeOut {
     from { opacity: 1; transform: translate(-50%, 0); }
-    to { opacity: 0; transform: translate(-50%, -20px); } /* Centrato e scorre verso l'alto */
+    to { opacity: 0; transform: translate(-50%, -20px); }
   }

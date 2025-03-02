@@ -7,10 +7,10 @@ function StaffSection() {
   const [staff, setStaff] = useState([]); // Stato per memorizzare la lista del personale
   const [newStaff, setNewStaff] = useState(""); // Stato per memorizzare il nuovo codice dipendente
 
-  // Recupera cod_ristorante e cod_utente dal localStorage
   const cod_ristorante = localStorage.getItem("cod_ristorante");
   const cod_utente = localStorage.getItem("cod_utente");
   const ruolo = localStorage.getItem("ruolo");
+
 
   // Funzione per aggiungere un nuovo dipendente
   async function handleAddStaff() {
@@ -22,7 +22,7 @@ function StaffSection() {
         },
         body: JSON.stringify({
           cod_dipendente: newStaff,
-          cod_ristorante: cod_ristorante, // Usa il cod_ristorante dal localStorage
+          cod_ristorante: cod_ristorante,
         }),
       });
 
@@ -30,8 +30,9 @@ function StaffSection() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json(); // Ricevi il dipendente aggiunto
-      setStaff((prevStaff) => [...prevStaff, data]); // Aggiungi il nuovo dipendente alla lista
+
+      const data = await response.json();
+      setStaff((prevStaff) => [...prevStaff, data]);
       setNewStaff(""); // Resetta l'input
     } catch (error) {
       console.error("Error adding staff:", error);
@@ -46,20 +47,21 @@ function StaffSection() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ cod_ristorante }), // Invia il cod_ristorante dal localStorage
+        body: JSON.stringify({ cod_ristorante }),
       });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json(); // Ricevi la lista del personale
+      const data = await response.json();
       setStaff(Array.isArray(data) ? data : []); // Aggiorna lo stato solo se i dati sono un array
     } catch (error) {
       console.error("Error fetching staff:", error);
       setStaff([]); // Imposta la lista del personale come vuota in caso di errore
     }
   }
+
 
   // Funzione per rimuovere un dipendente
   async function removeStaff(ID) {
@@ -76,17 +78,16 @@ function StaffSection() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Rimuovi il dipendente dalla lista
+      // Rimuove il dipendente dalla lista
       setStaff((prevStaff) => prevStaff.filter((staff) => staff.ID !== ID));
     } catch (error) {
       console.error("Error removing staff:", error);
     }
   }
 
-  // Effetto per caricare la lista del personale al montaggio del componente
   useEffect(() => {
     fetchStaff();
-  }, []); // Esegui solo al montaggio del componente
+  }, []); 
 
   return (
     <div>

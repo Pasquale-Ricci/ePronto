@@ -77,7 +77,7 @@ function ManagerPage() {
   } else if (view === "tables") {
     return <ManagerTable changeView={() => changeView("main")} />;
   } else if (view === "beverages") {
-    return <BeverageSection changeView={() => changeView("main")} />; // Visualizza BeverageSection
+    return <BeverageSection changeView={() => changeView("main")} />;
   }
 }
 

@@ -43,7 +43,7 @@ app.post('/register', async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Inserisci il nuovo utente nel database
+        // Inserisce il nuovo utente nel database
         await client.query('INSERT INTO "Users" ("Nome","Cognome","Email", "Password_hash", "Ruolo") VALUES ($1, $2, $3,$4,$5) RETURNING "ID", "Email", "Ruolo" ', [nome, cognome, email, hashedPassword, ruolo]);
 
         res.status(201).json({ message: 'User registered successfully' });
@@ -53,7 +53,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Rotta di login
+// Rotta di login, basata su template di Rapidapp
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -168,10 +168,7 @@ app.post('/alerts', async (req, res) => {
     }
 });
 
-
-  
-
-
+//Rotta per ottenere lo staff del ristorante
 app.post('/staff', async (req, res) => {
     const { cod_ristorante } = req.body;
     // Validazione dell'input
@@ -193,6 +190,7 @@ app.post('/staff', async (req, res) => {
     }
 });
 
+//Rotta per aggiungere del personale allo staff
 app.post('/addStaff', async (req, res) => {
     const { cod_dipendente, cod_ristorante } = req.body;
 
@@ -224,6 +222,7 @@ app.post('/addStaff', async (req, res) => {
     }
 });
 
+//Rotta per rimuovere personale dallo staff
 app.post('/removeStaff', async (req, res) => {
     const { ID } = req.body;
 
@@ -248,7 +247,7 @@ app.post('/removeStaff', async (req, res) => {
     }
 });
 
-// Rotta per il menu
+//Rotta per il menu
 app.post('/menu', async (req, res) => {
     const { cod_ristorante } = req.body;
     try {
@@ -263,9 +262,7 @@ app.post('/menu', async (req, res) => {
     }
 });
 
-
-
-// aggiornamento Menu
+//Rotta per aggiornare il Menu
 app.put('/menu_update', async (req, res) => {
     const { Cod_menu, Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura, Disponibile } = req.body;
   
@@ -288,21 +285,9 @@ app.put('/menu_update', async (req, res) => {
       res.status(500).json({ error: "Errore del server" });
     }
 });
+
+//Rotta per ottenere il Beverage del ristorante
 app.post('/beverages', async (req, res) => {
-    const { cod_ristorante } = req.body;
-    try {
-        const beverages = await client.query(
-            `SELECT "Cod_scorta", "Nome", DATE("Scadenza") AS "Scadenza", "Quantita", "Quantita_max", "Quantita_critica"
-             FROM "Beverage" 
-             WHERE "Cod_ristorante" = $1`, 
-            [cod_ristorante]
-        );
-        res.json(beverages.rows);
-    } catch (error) {
-        console.error('Error fetching beverages:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});app.post('/beverages', async (req, res) => {
     const { cod_ristorante } = req.body;
     try {
         const beverages = await client.query(
@@ -316,6 +301,7 @@ app.post('/beverages', async (req, res) => {
     }
 });
 
+//Rotta per aggiornare il Beverage
 app.put('/beverages_update', async (req, res) => {
     const { Cod_scorta, Nome, Scadenza, Quantita, Quantita_max, Quantita_critica } = req.body;
 
@@ -339,9 +325,7 @@ app.put('/beverages_update', async (req, res) => {
     }
 });
 
-
-
-// Rotta per il report degli ordini
+// Rotta per il report degli ordini, usato dalla GraphSection
 app.post('/orderReport', async (req, res) => {
     try {
         const orderReport = await client.query(
@@ -354,10 +338,7 @@ app.post('/orderReport', async (req, res) => {
     }
 });
 
-
-
-// Rotta per il report del beverage
-
+// Rotta per il report del beverage, usato dalla GraphSection
 app.post('/beverageReport', async (req, res) => {
     const { cod_ristorante } = req.body; 
     try {
@@ -371,7 +352,6 @@ app.post('/beverageReport', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 // Rotta per ottenere la lista dei tavoli
 app.post("/tables", async (req, res) => {
@@ -438,7 +418,6 @@ app.delete("/remove_table", async (req, res) => {
     }
 });
 
-
 // Rotta per inserire un nuovo ordine
 app.post('/orders', async (req, res) => {
     const { table, totale, notes } = req.body;
@@ -474,12 +453,9 @@ app.post('/menu_order', async (req, res) => {
     }
 });
 
-
 //Rotta per creare il menu
 app.post('/create_menu', async (req, res) => {
     const { nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, Cod_ristorante } = req.body;
-
-    console.log("Dati ricevuti:", req.body); // LOG PER DEBUG
 
     if (!Cod_ristorante || isNaN(Cod_ristorante)) {
         return res.status(400).json({ error: "Cod_ristorante non valido" });
@@ -511,6 +487,7 @@ app.get('/completed_orders', async (req, res) => {
     }
 });
 
+//Rotta per impostare un tavolo occupato
 app.post('/seat_customers', async (req, res) => {
     const { tableId } = req.body;
 
@@ -544,6 +521,7 @@ app.post('/complete_payment', async (req, res) => {
     }
 });
 
+//Rotta per rendere disponibile un tavolo dopo il pagamento di tutti gli ordini
 app.post('/free_table', async (req, res) => {
     const { tableId } = req.body;
 
@@ -581,7 +559,7 @@ app.get('/kitchen_orders', async (req, res) => {
     }
 });
 
-// Rotta per marcare un piatto come completato o non completato
+// Rotta per marcare un piatto come pronto o non pronto
 app.post('/toggle_dish_completion', async (req, res) => {
     const { orderId, menuId, completato } = req.body;
 
@@ -605,7 +583,7 @@ app.post('/toggle_dish_completion', async (req, res) => {
     }
 });
 
-// Rotta per contrassegnare un ordine come completato
+// Rotta per contrassegnare un ordine come completato (un ordine in cui tutti i singoli piatti sono pronti)
 app.post('/complete_order', async (req, res) => {
     const { orderId } = req.body;
 
@@ -628,48 +606,6 @@ app.post('/complete_order', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
-app.post("/beverages", async (req, res) => {
-    const { cod_ristorante } = req.body;
-
-    if (!cod_ristorante) {
-        return res.status(400).json({ error: "cod_ristorante è obbligatorio" });
-    }
-
-    try {
-        const beverages = await client.query(
-            'SELECT * FROM "Beverage" WHERE "Cod_ristorante" = $1;',
-            [cod_ristorante]
-        );
-        res.json(beverages.rows);
-    } catch (error) {
-        console.error("Error fetching beverages:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-});
-
-app.post("/beverage_order", async (req, res) => {
-    const { cod_scorta, quantita } = req.body;
-  
-    // Verifica che i campi obbligatori siano presenti
-    if (!cod_scorta || !quantita) {
-      return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
-    }
-  
-    try {
-      // Riduci la quantità disponibile nella tabella Beverage
-      const result = await client.query(
-        'UPDATE "Beverage" SET "Quantita" = "Quantita" - $1 WHERE "Cod_scorta" = $2 RETURNING *;',
-        [quantita, cod_scorta]
-      );
-  
-      // Restituisci i dati aggiornati
-      res.status(200).json(result.rows[0]);
-    } catch (error) {
-      console.error("Error updating beverage quantity:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
 
 // Rotta per inviare notifiche ai camerieri
 app.post('/notify', async (req, res) => {
@@ -700,7 +636,6 @@ app.post('/notify', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 // Avvia il server
 const PORT = process.env.PORT || 3000;

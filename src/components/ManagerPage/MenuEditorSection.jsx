@@ -19,6 +19,7 @@ function MenuEditorSection({ changeView }) {
   const [isFeedbackPositive, setIsFeedbackPositive] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
 
+
   const tipiPiattoPredefiniti = [
     "Antipasto",
     "Primo",
@@ -26,6 +27,7 @@ function MenuEditorSection({ changeView }) {
     "Dolce",
     "Altro",
   ];
+
 
   const handleTipoChange = (e) => {
     const value = e.target.value;
@@ -38,18 +40,20 @@ function MenuEditorSection({ changeView }) {
     }
   };
 
+
   // Funzione per mostrare il feedback
   const displayFeedback = (message, isPositive) => {
     setFeedbackMessage(message);
     setIsFeedbackPositive(isPositive);
     setShowFeedback(true);
 
-    // Nascondi il feedback dopo 4 secondi
     setTimeout(() => {
       setShowFeedback(false);
     }, 4000);
   };
 
+
+  //Submit delle modifiche al menu
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -105,6 +109,7 @@ function MenuEditorSection({ changeView }) {
     }
   };
 
+  
   return (
     <div className={styles.menuEditorContainer}>
       {/* Mostra il feedback se necessario */}

@@ -3,7 +3,8 @@ import styles from "../../modules/AlertSection.module.css";
 function AlertSection() {
   const [alerts, setAlerts] = useState(null);
 
-  //Funzione per ottenere la lista degli alert mediante il server del DB
+
+  //Funzione per ottenere la lista degli alert
   async function fetchAlerts() {
     try {
       const response = await fetch("http://localhost:3000/alerts", {
@@ -27,6 +28,8 @@ function AlertSection() {
     }
   }
 
+
+  //Quando il componente viene caricato vengono richiesti gli alert
   useEffect(() => {
     async function getAlerts() {
       const data = await fetchAlerts();
@@ -36,6 +39,8 @@ function AlertSection() {
     getAlerts();
   }, []);
 
+
+  
   if (!alerts) {
     return (
       <div className={styles.alertsContainer}>

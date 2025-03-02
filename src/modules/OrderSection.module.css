@@ -1,8 +1,8 @@
 .sectionContainer {
-    display: flex; /* Layout flessibile */
-    gap: 20px; /* Spazio tra le sezioni */
-    justify-content: space-between; /* Distribuisce lo spazio tra le sezioni */
-    padding: 20px; /* Padding per il contenitore */
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 20px;
 }
 
 .menu {
@@ -11,7 +11,7 @@
     background-color: white;
     border-radius: 10px;
     padding: 20px;
-    width: 48%; /* Larghezza fissa per ciascuna sezione */
+    width: 48%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -93,8 +93,6 @@
     border-color: #ff6666;
     color: #333;
 }
-
-
 
 .menu h2 {
     color: #ff6666;
@@ -198,7 +196,6 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Animazioni */
 @keyframes fadeIn {
     from {
         opacity: 0;

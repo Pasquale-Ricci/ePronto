@@ -1,3 +1,5 @@
+//Questo componente viene utilzzato per dare feedback rispetto ad un azione eseguita 
+
 import React, { useState, useEffect } from 'react';
 import style from '../modules/Feedback.module.css';
 

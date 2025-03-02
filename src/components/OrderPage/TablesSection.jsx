@@ -4,8 +4,9 @@ import styles from "../../modules/TablesSection.module.css";
 import OrderPage from "../../pages/OrderPage";
 
 function TablesSection({ onBack }) {
-  // Aggiungi una prop `onBack` per gestire il ritorno
+  // Questa prop serve per gestire il ritorno
   const [tables, setTables] = useState([]);
+
 
   // Funzione per recuperare i tavoli
   async function getTables() {
@@ -35,7 +36,7 @@ function TablesSection({ onBack }) {
     }
   }
 
-  // Funzione per mettere a sedere i clienti
+  // Funzione per mettere a sedere i clienti (occupa il tavolo)
   async function seatCustomers(tableId) {
     try {
       const response = await fetch("http://localhost:3000/seat_customers", {

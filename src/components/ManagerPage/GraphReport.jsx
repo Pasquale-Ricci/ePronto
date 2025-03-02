@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartBar, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import styles from '../../modules/ManagerPage.module.css';
 
+//Inizializzazione grafico
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, PointElement, Title, Tooltip, Legend);
 
 function GraphReport() {
@@ -52,6 +53,7 @@ function GraphReport() {
             }
         };
 
+
         const fetchOrderData = async () => {
             try {
                 const response = await fetch('http://localhost:3000/orderReport', {
@@ -66,7 +68,6 @@ function GraphReport() {
                 }
 
                 const data = await response.json();
-                console.log('Order Data:', data); // Debug dei dati
                 setOrderData(data);
             } catch (error) {
                 console.error('Error fetching order report:', error);
@@ -77,6 +78,7 @@ function GraphReport() {
         fetchBeverageData();
         fetchOrderData();
     }, []);
+
 
     // Grafico a barre
     const barData = {
@@ -108,7 +110,7 @@ function GraphReport() {
 
     // Grafico a linee
     const lineData = {
-        labels: orderData.map(item => formatTimestamp(item.Ora)), // Converti il timestamp in formato leggibile
+        labels: orderData.map(item => formatTimestamp(item.Ora)), // Conversione del timestamp in formato leggibile
         datasets: [
             {
                 label: 'Numero di Ordini',

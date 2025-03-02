@@ -36,7 +36,7 @@ function HeroSection() {
     setIsFeedbackPositive(isPositive);
     setShowFeedback(true);
 
-    // Nascondi il feedback dopo 4 secondi
+    // Grazie al timer il feedback viene nascosto dopo 4 secondi (l'unita di misura sono i millisecondi)
     setTimeout(() => {
       setShowFeedback(false);
     }, 4000);
@@ -119,7 +119,6 @@ function HeroSection() {
       );
 
       const data = await response.json();
-      console.log("Risposta server:", data); // 🔍 Debug
 
       if (response.ok) {
         displayFeedback("Ristorante registrato con successo!", true);
@@ -170,6 +169,7 @@ function HeroSection() {
     }
   };
 
+  //Se il proprietario effettua il primo login allora viene richiesto di registrare il ristorante
   if (firstLogin) {
     return (
       <div className={styles.heroSection}>

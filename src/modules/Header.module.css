@@ -38,7 +38,7 @@
 .headerLoggedIn {
     display: flex;
     align-items: center;
-    gap: 20px; /* Spazio tra gli elementi */
+    gap: 20px;
 }
 
 .logo {

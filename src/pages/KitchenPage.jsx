@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+
+//Import delle icone da fontawesome
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faStickyNote,
@@ -13,12 +15,25 @@ import styles from "../modules/KitchenPage.module.css";
 import Header from "../components/LandingPage/Header";
 
 function KitchenPage() {
+
+  //Dichiarazione variabili di stato
+  //Variabile degli ordini preparati
   const [orders, setOrders] = useState([]);
+
+  //Ordine selezionato dallo slider sopra la pagina
   const [selectedOrder, setSelectedOrder] = useState(null);
+
+  //Variabile per gli ordini completati
   const [showCompletedOrders, setShowCompletedOrders] = useState(false);
+
+  //Risultato della richiesta all'IA
   const [apiResult, setApiResult] = useState(null);
-  const [selectedCriterion, setSelectedCriterion] = useState("Parallelo"); // Stato per il criterio selezionato
+
+  //Criterio per la richiesta all'edpoint dell'IA
+  const [selectedCriterion, setSelectedCriterion] = useState("Parallelo");
   const codRistorante = localStorage.getItem("cod_ristorante");
+
+
 
   // Funzione per recuperare gli ordini con i piatti associati
   async function getKitchenOrders() {
@@ -35,14 +50,20 @@ function KitchenPage() {
       }
 
       const data = await response.json();
+      //Vengono raggruppati i piatti per ordine
+      //Acc che sarebbe l'accumulatore scorre ogni item dell'array
+      //Viene quindi cercata corrispondenza fra le due chiavi (Cod_ordine)
       const groupedOrders = data.reduce((acc, item) => {
         const order = acc.find((o) => o.Cod_ordine === item.Cod_ordine);
+        //Viene effettuato il controllo per vedere se order non è undefined
+        //Successivamente lo si aggiunge all'ordine trovato
         if (order) {
           order.dishes.push(item);
         } else {
+          //Se l'ordine a cui mettere il piatto non esiste viene creato l'ordine a cui inserire il piatto
           acc.push({
             Cod_ordine: item.Cod_ordine,
-            Note_ordine: item.Note_ordine || "Nessuna nota", // Gestisci Note_ordine null/undefined
+            Note_ordine: item.Note_ordine || "Nessuna nota",
             Cod_tavolo: item.Cod_tavolo,
             Ora: item.Ora,
             Completato: item.Completato,
@@ -51,9 +72,10 @@ function KitchenPage() {
           });
         }
         return acc;
-      }, []);
+      }, []); //Viene inizializzato acc ad array vuoto
 
       setOrders(groupedOrders);
+      //Se vengono trovati ordini l'ordine selezionato di default è il primo
       if (groupedOrders.length > 0) {
         setSelectedOrder(groupedOrders[0].Cod_ordine);
       }
@@ -65,7 +87,10 @@ function KitchenPage() {
     }
   }
 
-  // Funzione per chiamare l'API di ordinamento piatti
+
+
+  //Funzione per chiamare l'API di ordinamento piatti
+  //Fornisce risposte tramite l'intelligenza artificiale
   async function callOrderApi() {
     try {
       // Aggiorna i dati degli ordini prima di procedere
@@ -76,7 +101,7 @@ function KitchenPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ criterio: selectedCriterion }), // Usa il criterio selezionato
+        body: JSON.stringify({ criterio: selectedCriterion }),
       });
 
       if (!response.ok) {
@@ -84,11 +109,13 @@ function KitchenPage() {
       }
 
       const result = await response.json();
-      setApiResult(result.risultato); // Memorizza il risultato dell'API
+      setApiResult(result.risultato);
     } catch (error) {
       console.error("Error calling order API:", error);
     }
   }
+
+
 
   // Funzione per gestire il completamento di un piatto
   async function toggleDishCompletion(orderId, menuId, completato, dishName) {
@@ -108,6 +135,7 @@ function KitchenPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
+      //Viene notificato il completamento del piatto
       const dishMessage = `Il piatto ${dishName} dell'ordine #${orderId} è stato completato.`;
       await notify(orderId, dishMessage);
 
@@ -138,6 +166,9 @@ function KitchenPage() {
     }
   }
 
+
+
+
   // Funzione per inviare notifiche
   async function notify(orderId, message) {
     try {
@@ -156,12 +187,18 @@ function KitchenPage() {
     }
   }
 
+
+
+  //Vengono caricati gli ordini sul render del componente
   useEffect(() => {
     getKitchenOrders();
   }, []);
 
   const pendingOrders = orders.filter((order) => !order.Completato);
   const completedOrders = orders.filter((order) => order.Completato);
+
+
+
 
   return (
     <>

@@ -1,23 +1,25 @@
 import express from 'express';
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import cors from 'cors'; // Importa il pacchetto cors
+import cors from 'cors';
 
 const app = express();
 app.use(express.json()); // Middleware per parsare il body in JSON
 
+//Key dell'API di Gemini
 const genAI = new GoogleGenerativeAI("AIzaSyDt7wGB_py6H4S_Xi6EXZwxjW1E1rrHciw");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-// Configura CORS
+// Configurazione CORS dal template
 app.use(cors({
-    origin: 'http://localhost:5173', // Consenti solo richieste da questo dominio
+    origin: 'http://localhost:5173', // Consente solo richieste da questo dominio
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Metodi consentiti
     allowedHeaders: ['Content-Type', 'Authorization'], // Header consentiti
 }));
 
 app.post('/ordina-piatti', async (req, res) => {
     try {
-        const { criterio } = req.body; // Ottieni il criterio dal body della richiesta
+        //Prende il criterio dal body della richiesta
+        const { criterio } = req.body; 
 
         if (!criterio) {
             return res.status(400).json({ error: "Il campo 'criterio' è obbligatorio nel body della richiesta." });
@@ -31,14 +33,13 @@ app.post('/ordina-piatti', async (req, res) => {
             },
         });
 
-        console.log("Risposta da kitchen_orders:", response); // Debug: log della risposta
 
         if (!response.ok) {
             throw new Error(`Errore durante il fetch degli ordini: ${response.statusText}`);
         }
 
-        const data = await response.json(); // Estrai i dati JSON dalla risposta
-        console.log("Dati degli ordini ricevuti:", data); // Debug: log dei dati ricevuti
+        const data = await response.json();
+
 
         // Verifica che i dati siano un array
         if (!Array.isArray(data)) {
@@ -47,9 +48,8 @@ app.post('/ordina-piatti', async (req, res) => {
 
         // Filtra gli ordini non completati e i piatti non pronti
         const filteredOrders = data
-            .filter(order => order && !order.Completato && !order.Pronto); // Escludi ordini completati e piatti pronti
+            .filter(order => order && !order.Completato && !order.Pronto);
 
-        console.log("Ordini filtrati:", filteredOrders); // Debug: log degli ordini filtrati
 
         if (filteredOrders.length === 0) {
             return res.status(200).json({ message: "Nessun ordine da preparare." });
@@ -57,7 +57,7 @@ app.post('/ordina-piatti', async (req, res) => {
 
         const dataString = JSON.stringify(filteredOrders, null, 2);
 
-        // Costruisci il prompt per il modello generativo
+        //Promp che viene fornito al modello
         const prompt = `
 A seguire ti verrà fornita una lista di ordini in formato tabellare in base alle varie caratteristiche, 
 devi ordinare i piatti da preparare per questi ordini forniti in formato tabellare ${dataString} in base al criterio seguente: ${criterio}.
@@ -69,18 +69,14 @@ Graduale: Risolvi prima gli antipasti poi i primi e così via...
 Sii il più sintetico possibile, fornendo solo le informazioni essenziali
 `;
 
-        console.log("Prompt generato:", prompt); // Debug: log del prompt
-
         // Genera il contenuto utilizzando il modello
         const result = await model.generateContent(prompt);
         const responseText = result.response.text();
 
-        console.log("Risultato dell'API:", responseText); // Debug: log del risultato
-
-        // Restituisci il risultato
+        // Restituisce il risultato
         res.status(200).json({ risultato: responseText });
     } catch (error) {
-        console.error("Errore durante l'elaborazione della richiesta:", error); // Debug: log dell'errore
+        console.error("Errore durante l'elaborazione della richiesta:", error);
         res.status(500).json({ error: "Si è verificato un errore durante l'elaborazione della richiesta.", details: error.message });
     }
 });

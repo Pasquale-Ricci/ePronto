@@ -93,13 +93,13 @@
     border: 2px solid white;
     border-radius: 0px;
     background: linear-gradient(90deg, hsla(0, 100%, 56%, 0.761), hsla(0, 0%, 97%, 0.692));
-    background-size: 150% 50%; /* Estende il gradiente oltre la larghezza del bottone */
+    background-size: 150% 50%;
     background-position: left; 
     transition: background-position 1s ease;
 }
 
 .managerBtn:hover {
-    background-position: right; /* Sposta il gradiente a destra durante l'hover */
+    background-position: right;
 }
 
 .staffContainer{

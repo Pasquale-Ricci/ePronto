@@ -39,6 +39,8 @@ function BeverageSection({ changeView }) {
     }
   }
 
+
+
   async function updateBeverage() {
     try {
       const response = await fetch("http://localhost:3000/beverages_update", {
@@ -61,10 +63,14 @@ function BeverageSection({ changeView }) {
     }
   }
 
+
+  //Viene richiesta la lista del beverage al render del componente
   useEffect(() => {
     fetchBeverages();
   }, []);
 
+  //Nel render della lista viene controllato se si sta modificando l'elemento del beverage
+  //Quindi se il bottone modifica e stato premuto viene fornito il JSX seguente
   const beverageItems = beverages.map((beverage, i) => (
     <li key={i} className={styles.beverageItem}>
       {editingItem === beverage.Cod_scorta ? (
@@ -116,7 +122,7 @@ function BeverageSection({ changeView }) {
         <div>
           <strong>{beverage.Nome}</strong>
           <p>Scadenza: {formatDate(beverage.Scadenza)}</p>{" "}
-          {/* Formatta la data qui */}
+          {/* Formattazione della data*/}
           <span>Quantità: {beverage.Quantita}</span>
           <span>Quantità massima: {beverage.Quantita_max}</span>
           <span>Quantità critica: {beverage.Quantita_critica}</span>

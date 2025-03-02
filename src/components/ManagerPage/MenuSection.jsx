@@ -30,6 +30,7 @@ function MenuSection() {
     }
   }
 
+
   async function updateMenuItem() {
     try {
       const response = await fetch("http://localhost:3000/menu_update", {
@@ -52,9 +53,11 @@ function MenuSection() {
     }
   }
 
+
   useEffect(() => {
     fetchMenu();
   }, []);
+
 
   const sortedMenu = [...menu].sort((a, b) =>
     a.Tipo_piatto.localeCompare(b.Tipo_piatto)
@@ -63,6 +66,7 @@ function MenuSection() {
   const menuItems = [];
   let currentTipoPiatto = "";
 
+  
   for (let i = 0; i < sortedMenu.length; i++) {
     const piatto = sortedMenu[i];
     if (piatto.Tipo_piatto !== currentTipoPiatto) {
