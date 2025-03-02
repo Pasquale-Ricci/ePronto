@@ -1,0 +1,73 @@
+/* Contenitore principale degli alert */
+.alertsContainer {
+    font-family: 'Arial', sans-serif;
+    width: 400px; /* Larghezza fissa per rendere il riquadro quadrato */
+    height: 400px; /* Altezza fissa per rendere il riquadro quadrato */
+    margin: 0 auto; /* Centrato orizzontalmente */
+    margin-top: 0px; /* Posizionato più in alto */
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Allinea il contenuto in alto */
+    overflow-y: auto; /* Aggiunge scroll se il contenuto supera l'altezza */
+  }
+  
+  /* Titolo principale */
+  .alertsContainer h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Messaggio quando non ci sono alert */
+  .noAlertsMessage {
+    font-size: 16px;
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Sezione degli alert */
+  .alertSection {
+    margin-bottom: 20px;
+  }
+  
+  /* Titolo della sezione (es. Beverage Alerts, Ordini in ritardo) */
+  .alertSection h3 {
+    font-size: 18px;
+    color: #444;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  /* Lista degli alert */
+  .alertList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Elemento della lista */
+  .alertItem {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+  }
+  
+  .alertItem:hover {
+    background-color: #f1f1f1;
+  }
+  
+  /* Testo degli elementi della lista */
+  .alertItem li {
+    font-size: 14px;
+    color: #222;
+  }
