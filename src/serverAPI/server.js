@@ -639,6 +639,48 @@ app.post('/complete_order', async (req, res) => {
     }
 });
 
+app.post("/beverages", async (req, res) => {
+    const { cod_ristorante } = req.body;
+
+    if (!cod_ristorante) {
+        return res.status(400).json({ error: "cod_ristorante è obbligatorio" });
+    }
+
+    try {
+        const beverages = await client.query(
+            'SELECT * FROM "Beverage" WHERE "Cod_ristorante" = $1;',
+            [cod_ristorante]
+        );
+        res.json(beverages.rows);
+    } catch (error) {
+        console.error("Error fetching beverages:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.post("/beverage_order", async (req, res) => {
+    const { cod_scorta, quantita } = req.body;
+  
+    // Verifica che i campi obbligatori siano presenti
+    if (!cod_scorta || !quantita) {
+      return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
+    }
+  
+    try {
+      // Riduci la quantità disponibile nella tabella Beverage
+      const result = await client.query(
+        'UPDATE "Beverage" SET "Quantita" = "Quantita" - $1 WHERE "Cod_scorta" = $2 RETURNING *;',
+        [quantita, cod_scorta]
+      );
+  
+      // Restituisci i dati aggiornati
+      res.status(200).json(result.rows[0]);
+    } catch (error) {
+      console.error("Error updating beverage quantity:", error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  });
+
 // Rotta per inviare notifiche ai camerieri
 app.post('/notify', async (req, res) => {
     const { orderId, codRistorante, message } = req.body;
