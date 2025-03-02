@@ -2,41 +2,49 @@ import Header from "../LandingPage/Header";
 import { useEffect, useState } from "react";
 import OrderPage from "../../pages/OrderPage";
 import styles from "../../modules/OrderSection.module.css";
-import Feedback from "../Feedback"; // Importa il componente Feedback
+import Feedback from "../Feedback";
 
 function OrderSection() {
   const [view, setView] = useState(true);
   const [tables, setTables] = useState([]);
   const [selectedTable, setSelectedTable] = useState(0);
   const [menu, setMenu] = useState([]);
+  const [beverages, setBeverages] = useState([]);
   const [order, setOrder] = useState({});
+  const [beverageOrder, setBeverageOrder] = useState({});
   const [notes, setNotes] = useState("");
-  const [feedbackMessage, setFeedbackMessage] = useState(""); // Stato per il messaggio di feedback
-  const [feedbackType, setFeedbackType] = useState(""); // Stato per il tipo di feedback (positivo/negativo)
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackType, setFeedbackType] = useState("");
+
+  // Funzione per selezionare un tavolo
+  const takeOrder = (tableId) => {
+    setSelectedTable(tableId);
+  };
 
   // Funzione per visualizzare i tavoli disponibili
   async function getTables() {
     try {
       const response = await fetch("http://localhost:3000/tables", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          cod_ristorante: localStorage.getItem("cod_ristorante"),
+        }),
       });
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setTables(await response.json());
+
+      const data = await response.json();
+      setTables(data);
     } catch (error) {
       console.error("Error fetching tables:", error);
       setFeedbackMessage("Errore nel caricamento dei tavoli");
       setFeedbackType("errore");
     }
-  }
-
-  // Funzione per aprire il menu del tavolo selezionato
-  function takeOrder(table) {
-    setSelectedTable(table);
   }
 
   // Funzione per visualizzare il menu
@@ -57,7 +65,7 @@ function OrderSection() {
       }
 
       const data = await response.json();
-      setMenu(Array.isArray(data) ? data : []); // Assicurati che data sia un array
+      setMenu(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching menu:", error);
       setMenu([]);
@@ -66,11 +74,39 @@ function OrderSection() {
     }
   }
 
+  // Funzione per visualizzare le bevande
+  async function getBeverages() {
+    try {
+      const response = await fetch("http://localhost:3000/beverages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cod_ristorante: localStorage.getItem("cod_ristorante"),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setBeverages(data);
+    } catch (error) {
+      console.error("Error fetching beverages:", error);
+      setFeedbackMessage("Errore nel caricamento delle bevande");
+      setFeedbackType("errore");
+    }
+  }
+
   useEffect(() => {
     getTables();
     getMenu();
+    getBeverages();
   }, []);
 
+  // Funzione per aggiungere un piatto all'ordine
   const addToOrder = (piatto) => {
     setOrder((prevOrder) => {
       const newOrder = { ...prevOrder };
@@ -83,6 +119,7 @@ function OrderSection() {
     });
   };
 
+  // Funzione per rimuovere un piatto dall'ordine
   const removeFromOrder = (piatto) => {
     setOrder((prevOrder) => {
       const newOrder = { ...prevOrder };
@@ -96,13 +133,48 @@ function OrderSection() {
     });
   };
 
+  // Funzione per aggiungere una bevanda all'ordine
+  const addBeverageToOrder = (beverage) => {
+    setBeverageOrder((prevOrder) => {
+      const newOrder = { ...prevOrder };
+      if (newOrder[beverage.Cod_scorta]) {
+        newOrder[beverage.Cod_scorta]++;
+      } else {
+        newOrder[beverage.Cod_scorta] = 1;
+      }
+      return newOrder;
+    });
+  };
+
+  // Funzione per rimuovere una bevanda dall'ordine
+  const removeBeverageFromOrder = (beverage) => {
+    setBeverageOrder((prevOrder) => {
+      const newOrder = { ...prevOrder };
+      if (newOrder[beverage.Cod_scorta]) {
+        newOrder[beverage.Cod_scorta]--;
+        if (newOrder[beverage.Cod_scorta] === 0) {
+          delete newOrder[beverage.Cod_scorta];
+        }
+      }
+      return newOrder;
+    });
+  };
+
   const submitOrder = async () => {
     try {
-      // Calcola il totale dell'ordine
-      const totale = Object.keys(order).reduce((sum, cod_menu) => {
+      // Calcola il totale dell'ordine dei piatti
+      const totalePiatti = Object.keys(order).reduce((sum, cod_menu) => {
         const piatto = menu.find((p) => p.Cod_menu === parseInt(cod_menu));
         return sum + piatto.Prezzo * order[cod_menu];
       }, 0);
+
+      // Calcola il totale dell'ordine delle bevande
+      const totaleBevande = Object.keys(beverageOrder).reduce((sum, cod_scorta) => {
+        const beverage = beverages.find((b) => b.Cod_scorta === parseInt(cod_scorta));
+        return sum + (beverage?.Prezzo || 0) * beverageOrder[cod_scorta];
+      }, 0);
+
+      const totale = totalePiatti + totaleBevande;
 
       // Inserisci l'ordine nella tabella Ordine
       const response = await fetch("http://localhost:3000/orders", {
@@ -140,9 +212,26 @@ function OrderSection() {
         })
       );
 
+      // Aggiorna la quantità di bevande nella tabella Beverage
+      await Promise.all(
+        Object.keys(beverageOrder).map(async (cod_scorta) => {
+          await fetch("http://localhost:3000/beverage_order", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              cod_scorta: parseInt(cod_scorta),
+              quantita: beverageOrder[cod_scorta],
+            }),
+          });
+        })
+      );
+
       setFeedbackMessage("Ordine inviato con successo!");
       setFeedbackType("successo");
       setOrder({});
+      setBeverageOrder({});
       setNotes("");
     } catch (error) {
       console.error("Error submitting order:", error);
@@ -166,11 +255,10 @@ function OrderSection() {
           {tables.map((table, index) => (
             <div key={index}>
               <button
-                className={`${styles.tableBtn} ${
-                  selectedTable === table.Cod_tavolo
-                    ? styles.selectedTableBtn
-                    : ""
-                }`}
+                className={`${styles.tableBtn} ${selectedTable === table.Cod_tavolo
+                  ? styles.selectedTableBtn
+                  : ""
+                  }`}
                 onClick={() => takeOrder(table.Cod_tavolo)}
               >
                 Tavolo {table.Cod_tavolo}
@@ -222,6 +310,30 @@ function OrderSection() {
         </li>
       );
     }
+
+    const beverageItems = beverages.map((beverage, index) => (
+      <li key={index} className={styles.menuItem}>
+        {beverage.Nome}
+        <div className={styles.menuButtons}>
+          <button
+            className={styles.menuBtn}
+            onClick={() => removeBeverageFromOrder(beverage)}
+          >
+            -
+          </button>
+          <span className={styles.menuCount}>
+            {beverageOrder[beverage.Cod_scorta] || 0}
+          </span>
+          <button
+            className={styles.menuBtn}
+            onClick={() => addBeverageToOrder(beverage)}
+          >
+            +
+          </button>
+        </div>
+      </li>
+    ));
+
     return (
       <>
         <Header />
@@ -232,11 +344,10 @@ function OrderSection() {
           {tables.map((table, index) => (
             <div key={index}>
               <button
-                className={`${styles.tableBtn} ${
-                  selectedTable === table.Cod_tavolo
-                    ? styles.selectedTableBtn
-                    : ""
-                }`}
+                className={`${styles.tableBtn} ${selectedTable === table.Cod_tavolo
+                  ? styles.selectedTableBtn
+                  : ""
+                  }`}
                 onClick={() => takeOrder(table.Cod_tavolo)}
               >
                 Tavolo {table.Cod_tavolo}
@@ -245,18 +356,27 @@ function OrderSection() {
           ))}
         </div>
 
-        <div className={styles.menu}>
-          <h2>Menu Corrente</h2>
-          <ul>{menuItems}</ul>
-          <textarea
-            className={styles.notes}
-            placeholder="Aggiungi note all'ordine"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-          />
-          <button className={styles.submitBtn} onClick={submitOrder}>
-            Invia Ordine
-          </button>
+        <div className={styles.sectionContainer}>
+          <div className={styles.menu}>
+            <h2>Menu Corrente</h2>
+            <ul>{menuItems}</ul>
+          </div>
+
+          <div className={styles.menu}>
+            <h2>Bevande</h2>
+            <ul>{beverageItems}</ul>
+          </div>
+        </div>
+        <div className={styles.endSection}>
+        <textarea
+          className={styles.notes}
+          placeholder="Aggiungi note all'ordine"
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+        />
+        <button className={styles.submitBtn} onClick={submitOrder}>
+          Invia Ordine
+        </button>
         </div>
         {feedbackMessage && (
           <Feedback messaggio={feedbackMessage} positivo={feedbackType === "successo"} />
