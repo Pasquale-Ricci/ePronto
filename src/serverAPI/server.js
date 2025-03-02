@@ -262,7 +262,7 @@ app.post('/menu', async (req, res) => {
     const {cod_ristorante} = req.body;
     try {
         const menu = await client.query(
-            'SELECT * FROM "Menu" WHERE "Cod_ristorante" = $1 AND "Disponibile" = true', 
+            'SELECT * FROM "Menu" WHERE "Cod_ristorante" = $1', 
             [cod_ristorante]
         );
         res.json(menu.rows); 
@@ -272,28 +272,31 @@ app.post('/menu', async (req, res) => {
     }
 });
 
+
+
+// aggiornamento Menu
 app.put('/menu_update', async (req, res) => {
-    const { Cod_menu, Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura } = req.body;
-
+    const { Cod_menu, Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura, Disponibile } = req.body;
+  
     try {
-        const result = await client.query(
-            `UPDATE "Menu" 
-            SET "Nome" = $1, "Descrizione" = $2, "Allergeni" = $3, "Prezzo" = $4, "Tipo_piatto" = $5, "Tempo_cottura" = $6 
-            WHERE "Cod_menu" = $7 
-            RETURNING *`,
-            [Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura, Cod_menu]
-        );
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: "Elemento del menu non trovato" });
-        }
-
-        res.json({ message: "Menu aggiornato con successo", menu: result.rows[0] });
+      const result = await client.query(
+        `UPDATE "Menu" 
+        SET "Nome" = $1, "Descrizione" = $2, "Allergeni" = $3, "Prezzo" = $4, "Tipo_piatto" = $5, "Tempo_cottura" = $6, "Disponibile" = $7
+        WHERE "Cod_menu" = $8 
+        RETURNING *`,
+        [Nome, Descrizione, Allergeni, Prezzo, Tipo_piatto, Tempo_cottura, Disponibile, Cod_menu]
+      );
+  
+      if (result.rowCount === 0) {
+        return res.status(404).json({ error: "Elemento del menu non trovato" });
+      }
+  
+      res.json({ message: "Menu aggiornato con successo", menu: result.rows[0] });
     } catch (error) {
-        console.error("Errore aggiornamento menu:", error);
-        res.status(500).json({ error: "Errore del server" });
+      console.error("Errore aggiornamento menu:", error);
+      res.status(500).json({ error: "Errore del server" });
     }
-});
+  });
 
 
 
@@ -324,18 +327,72 @@ app.post('/beverageReport', async (req, res) => {
     }
 });
 
+
 // Rotta per ottenere la lista dei tavoli
-app.get('/tables', async (req, res) => {
+app.post("/tables", async (req, res) => {
+    const { cod_ristorante } = req.body;
+
+    if (!cod_ristorante) {
+        return res.status(400).json({ error: "cod_ristorante è obbligatorio" });
+    }
+
     try {
         const tables = await client.query(
-            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = 24;'
+            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = $1;',
+            [cod_ristorante]
         );
         res.json(tables.rows);
     } catch (error) {
-        console.error('Error fetching tables:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error fetching tables:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
+
+// Rotta per aggiungere un nuovo tavolo
+app.post("/add_table", async (req, res) => {
+    const { posti, cod_ristorante } = req.body;
+
+    if (!posti || !cod_ristorante) {
+        return res.status(400).json({ error: "Il numero di posti e il codice ristorante sono obbligatori" });
+    }
+
+    try {
+        const result = await client.query(
+            'INSERT INTO "Tavolo" ("Posti", "Cod_ristorante") VALUES ($1, $2) RETURNING *;',
+            [posti, cod_ristorante]
+        );
+        res.status(201).json(result.rows[0]);
+    } catch (error) {
+        console.error("Error adding table:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Rotta per rimuovere un tavolo
+app.delete("/remove_table", async (req, res) => {
+    const { id } = req.body;
+
+    if (!id) {
+        return res.status(400).json({ error: "ID del tavolo è obbligatorio" });
+    }
+
+    try {
+        const result = await client.query(
+            'DELETE FROM "Tavolo" WHERE "Cod_tavolo" = $1 RETURNING *;',
+            [id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Tavolo non trovato" });
+        }
+
+        res.json({ message: "Tavolo rimosso con successo" });
+    } catch (error) {
+        console.error("Error removing table:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 
 // Rotta per inserire un nuovo ordine
 app.post('/orders', async (req, res) => {

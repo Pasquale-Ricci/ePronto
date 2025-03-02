@@ -5,6 +5,7 @@ import StaffSection from "../components/ManagerPage/StaffSection";
 import MenuSection from "../components/ManagerPage/MenuSection";
 import ReportSection from "../components/ManagerPage/ReportSection";
 import MenuEditorSection from "../components/ManagerPage/MenuEditorSection";
+import ManagerTable from "../components/ManagerPage/ManagerTable"; // Assicurati che il percorso sia corretto
 import { useState } from "react";
 
 function ManagerPage() {
@@ -13,10 +14,6 @@ function ManagerPage() {
 
   function changeView(newView) {
     setView(newView);
-  }
-
-  function toggleMenuEditor() {
-    setShowMenuEditor((prev) => !prev);
   }
 
   if (view === "main") {
@@ -29,17 +26,30 @@ function ManagerPage() {
             <div>
               <h2>Accedi ai tuoi reports</h2>
               <button
-              className={style.managerBtn}
-              onClick={() => changeView("reports")}>Reports</button>
+                className={style.managerBtn}
+                onClick={() => changeView("reports")}
+              >
+                Reports
+              </button>
             </div>
             <div>
               <h2>Gestisci il menu</h2>
               <button
-              className={style.managerBtn} 
-              onClick={() => changeView("menuEditor")}>
+                className={style.managerBtn}
+                onClick={() => changeView("menuEditor")}
+              >
                 {showMenuEditor ? "Nascondi Editor" : "Crea Nuovo Menu"}
               </button>
               {showMenuEditor && <MenuEditorSection />}
+            </div>
+            <div>
+              <h2>Gestisci i tavoli</h2>
+              <button
+                className={style.managerBtn}
+                onClick={() => changeView("tables")}
+              >
+                Gestisci Tavoli
+              </button>
             </div>
           </div>
 
@@ -54,6 +64,8 @@ function ManagerPage() {
     return <ReportSection changeView={() => changeView("main")} />;
   } else if (view === "menuEditor") {
     return <MenuEditorSection changeView={() => changeView("main")} />;
+  } else if (view === "tables") {
+    return <ManagerTable changeView={() => changeView("main")} />;
   }
 }
 

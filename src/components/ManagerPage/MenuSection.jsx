@@ -46,7 +46,7 @@ function MenuSection() {
 
       setEditingItem(null);
       setFormData({});
-      fetchMenu(); // Ricarica il menu dopo la modifica
+      fetchMenu();
     } catch (error) {
       console.error("Error updating menu:", error);
     }
@@ -119,8 +119,26 @@ function MenuSection() {
                 setFormData({ ...formData, Tempo_cottura: e.target.value })
               }
             />
-            <button onClick={updateMenuItem}>Salva</button>
-            <button onClick={() => setEditingItem(null)}>Annulla</button>
+            <label>
+              Disponibile:
+              <input
+                type="checkbox"
+                checked={formData.Disponibile || false}
+                onChange={(e) =>
+                  setFormData({ ...formData, Disponibile: e.target.checked })
+                }
+              />
+            </label>
+
+            <button
+              className={styles.menuSave}
+              onClick={() => setEditingItem(null)}
+            >
+              Annulla
+            </button>
+            <button className={styles.menuSave} onClick={updateMenuItem}>
+              Salva
+            </button>
           </div>
         ) : (
           <div>
@@ -130,7 +148,17 @@ function MenuSection() {
               Allergeni: {piatto.Allergeni}, Tempo di cottura:{" "}
               {piatto.Tempo_cottura} min
             </span>
+
+            <span
+              style={{
+                marginLeft: "10px",
+                color: piatto.Disponibile ? "green" : "red",
+              }}
+            >
+              {piatto.Disponibile ? "Disponibile" : "Non disponibile"}
+            </span>
             <button
+              className={styles.menuChange}
               onClick={() => {
                 setEditingItem(piatto.Cod_menu);
                 setFormData(piatto);

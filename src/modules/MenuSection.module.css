@@ -2,7 +2,7 @@
   margin-top: 100px;
   display: flex;
   height: 100%;
-  gap: 20px; /* Spazio tra i due riquadri */
+  gap: 20px; 
   padding: 20px;
   background-color: #a3a3a324;
   min-height: 100vh;
@@ -10,43 +10,47 @@
 
 .menuForm,
 .menuSection {
-  flex: 1; /* Entrambi i riquadri occupano lo stesso spazio */
-  background-color: #f6f4f4; /* Colore di sfondo uniforme */
-  padding: 25px; /* Padding uniforme */
+  flex: 1; 
+  background-color: #f6f4f4; 
+  padding: 25px; 
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombra uniforme */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
 .menuContainer {
   background-color: #ffffff;
-  max-height: 500px; /* Altezza massima */
+  max-height: 500px; 
   padding: 20px;
-  height: auto; /* Altezza automatica */
+  width: 600px;
+  height: auto; 
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #000000; /* Testo scuro */
-  overflow-y: auto; /* Aggiunge lo slider verticale */
+  color: #000000; 
+  overflow-y: auto; 
 }
 
 .menuList {
-  list-style-type: none; /* Rimuove i pallini della lista */
+  list-style-type: none; 
   padding: 0;
 }
 
 .menuList li {
   padding: 10px;
-  border-bottom: 1px solid #a5a5a582; /* Linea divisoria */
+  border-bottom: 1px solid #a5a5a582; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
 }
 
 .menuList li:last-child {
-  border-bottom: none; /* Rimuove la linea dall'ultimo elemento */
+  border-bottom: none; 
 }
 
 .menuFormTitle {
   font-size: 26px;
   margin-bottom: 20px;
   font-weight: bold;
-  color: #000000; /* Testo scuro */
+  color: #000000;
 }
 
 .menuFormGroup {
@@ -61,7 +65,7 @@
   font-size: 16px;
   margin-bottom: 5px;
   font-weight: 500;
-  color: #000000; /* Testo scuro */
+  color: #000000; 
   text-align: left;
 }
 
@@ -72,12 +76,12 @@
   border: 2px solid #591010;
   border-radius: 5px;
   background-color: #ffffff;
-  color: #000000; /* Testo scuro */
+  color: #000000; 
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .menuFormInput:focus {
-  border-color: #b6b6b6; /* Colore del bordo quando in focus */
+  border-color: #b6b6b6; 
   background-color: #ffffff;
   outline: none;
 }
@@ -162,4 +166,42 @@
 
 .menuFormBackButton:hover {
   background-color: #c0392b;
+}
+
+.menuEditButton {
+  margin-left: 10000px; 
+  padding: 8px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.menuChange {
+  margin-left: 10px; 
+  padding: 5px 16px; 
+  border-radius: 10px; 
+  background-color: #a05c5c;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.menuSave{
+  margin-top: 10px;
+  margin-left: 10px; 
+  padding: 5px 16px; 
+  border-radius: 10px; 
+  background-color: #a05c5c;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.menuChange:hover {
+  background-color: #8c4d4d; 
+  transform: scale(1.05); 
 }

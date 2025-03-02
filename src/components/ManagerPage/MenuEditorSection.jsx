@@ -10,7 +10,7 @@ function MenuEditorSection({ changeView }) {
   const [tipo, setTipoPiatto] = useState("");
   const [tempoCottura, setTempoCottura] = useState("");
   const [disponibile, setDisponibile] = useState(true);
-  const [menuUpdated, setMenuUpdated] = useState(false); // Aggiunto per aggiornare il menu
+  const [menuUpdated, setMenuUpdated] = useState(false);
   const [customTipo, setCustomTipo] = useState("false");
   const tipiPiattoPredefiniti = [
     "Antipasto",
