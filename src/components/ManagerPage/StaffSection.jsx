@@ -109,6 +109,7 @@ function StaffSection() {
       </ul>
       <input
         id="newStaffInput"
+        className={styles.newStaffInput}
         value={newStaff}
         onChange={(e) => setNewStaff(e.target.value)}
         type="text"

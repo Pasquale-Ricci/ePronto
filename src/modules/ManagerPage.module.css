@@ -64,13 +64,13 @@
     border: 2px solid white;
     border-radius: 0px;
     background: linear-gradient(90deg, hsla(0, 84%, 56%, 0.692), hsla(0, 0%, 80%, 0.692));
-
 }
+
 .staffRole{
     font-size: 20px;
     font-style: italic;
-    
 }
+
 .managerBtn {
     font-size: 24px;
     width: 100%;
@@ -114,4 +114,20 @@ h3 {
 ul {
     list-style-type: none;
     padding-left: 0;
+}
+
+.newStaffInput {
+    font-size: 18px;
+    padding: 10px;
+    margin-bottom: 20px;
+    width: 95%;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.newStaffInput:focus {
+    border-color: #007bff;
+    outline: none;
 }

@@ -14,7 +14,7 @@ function MenuSection() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cod_ristorante: localStorage.getItem("cod_ristorante"),
+          cod_ristorante: localStorage.getItem("cod_ristorante")
         }),
       });
 
