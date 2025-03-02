@@ -321,11 +321,16 @@ app.post('/beverageReport', async (req, res) => {
     }
 });
 
-// Rotta per ottenere la lista dei tavoli
-app.get('/tables', async (req, res) => {
+app.post('/tables', async (req, res) => {
+    const { cod_ristorante } = req.body; // Ottieni cod_ristorante dal corpo della richiesta
+    if (!cod_ristorante) {
+        return res.status(400).json({ error: 'cod_ristorante is required' });
+    }
+
     try {
         const tables = await client.query(
-            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = 24;'
+            'SELECT * FROM "Tavolo" WHERE "Cod_ristorante" = $1;',
+            [cod_ristorante]
         );
         res.json(tables.rows);
     } catch (error) {

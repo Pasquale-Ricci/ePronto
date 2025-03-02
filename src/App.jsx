@@ -7,7 +7,7 @@ import ManagerPage from "./pages/ManagerPage.jsx";
 import OrderPage from "./pages/OrderPage.jsx";
 import KitchenPage from "./pages/KitchenPage.jsx";
 import OrderSection from "./components/OrderPage/OrderSection.jsx";
-import PaymentSection from "./components/OrderPage/PaymentSection.jsx";
+import PayementSection from "./components/OrderPage/PayementSection.jsx";
 import TablesSection from "./components/OrderPage/TablesSection.jsx";
 import feature1 from "./assets/PiattoFeature2.jpg";
 import feature2 from "./assets/StaffFeature2.png";
@@ -49,7 +49,7 @@ function App() {
         <Route path="/kitchenpage" element={<KitchenPage />} />
         <Route path="/orderpage" element={<OrderPage />}>
           <Route path="order" element={<OrderSection />} />
-          <Route path="payment" element={<PaymentSection />} />
+          <Route path="payment" element={<PayementSection />} />
           <Route path="tables" element={<TablesSection />} />
         </Route>
         <Route path="*" element={<h1>404 Not Found</h1>} />

@@ -2,6 +2,7 @@ import Header from "../LandingPage/Header";
 import { useEffect, useState } from "react";
 import OrderPage from "../../pages/OrderPage";
 import styles from "../../modules/OrderSection.module.css";
+import Feedback from "../Feedback"; // Importa il componente Feedback
 
 function OrderSection() {
   const [view, setView] = useState(true);
@@ -10,6 +11,8 @@ function OrderSection() {
   const [menu, setMenu] = useState([]);
   const [order, setOrder] = useState({});
   const [notes, setNotes] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState(""); // Stato per il messaggio di feedback
+  const [feedbackType, setFeedbackType] = useState(""); // Stato per il tipo di feedback (positivo/negativo)
 
   // Funzione per visualizzare i tavoli disponibili
   async function getTables() {
@@ -26,6 +29,8 @@ function OrderSection() {
       setTables(await response.json());
     } catch (error) {
       console.error("Error fetching tables:", error);
+      setFeedbackMessage("Errore nel caricamento dei tavoli");
+      setFeedbackType("errore");
     }
   }
 
@@ -56,6 +61,8 @@ function OrderSection() {
     } catch (error) {
       console.error("Error fetching menu:", error);
       setMenu([]);
+      setFeedbackMessage("Errore nel caricamento del menu");
+      setFeedbackType("errore");
     }
   }
 
@@ -133,12 +140,14 @@ function OrderSection() {
         })
       );
 
-      alert("Ordine inviato con successo!");
+      setFeedbackMessage("Ordine inviato con successo!");
+      setFeedbackType("successo");
       setOrder({});
       setNotes("");
     } catch (error) {
       console.error("Error submitting order:", error);
-      alert("Errore durante l'invio dell'ordine");
+      setFeedbackMessage("Errore durante l'invio dell'ordine");
+      setFeedbackType("errore");
     }
   };
 
@@ -169,14 +178,16 @@ function OrderSection() {
             </div>
           ))}
         </div>
+        {feedbackMessage && (
+          <Feedback messaggio={feedbackMessage} positivo={feedbackType === "successo"} />
+        )}
       </>
     );
   } else {
-    
     const sortedMenu = [...menu].sort((a, b) =>
       a.Tipo_piatto.localeCompare(b.Tipo_piatto)
     );
-    
+
     const menuItems = [];
     let currentTipoPiatto = "";
 
@@ -247,6 +258,9 @@ function OrderSection() {
             Invia Ordine
           </button>
         </div>
+        {feedbackMessage && (
+          <Feedback messaggio={feedbackMessage} positivo={feedbackType === "successo"} />
+        )}
       </>
     );
   }

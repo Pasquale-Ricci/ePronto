@@ -2,6 +2,7 @@ import styles from "../../modules/HeroSection.module.css";
 import logo from "../../assets/logoWeb.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Feedback from '../Feedback';
 
 function HeroSection() {
   const [loginBtn, setLoginBtn] = useState(false);
@@ -22,7 +23,24 @@ function HeroSection() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [role, setRole] = useState("");
 
+  // Stati per il feedback
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isFeedbackPositive, setIsFeedbackPositive] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+
   const navigate = useNavigate();
+
+  // Funzione per mostrare il feedback
+  const displayFeedback = (message, isPositive) => {
+    setFeedbackMessage(message);
+    setIsFeedbackPositive(isPositive);
+    setShowFeedback(true);
+
+    // Nascondi il feedback dopo 4 secondi
+    setTimeout(() => {
+      setShowFeedback(false);
+    }, 4000);
+  };
 
   const updateLoginForm = () => {
     setLoginBtn(!loginBtn);
@@ -54,7 +72,7 @@ function HeroSection() {
       const data = await response.json();
 
       if (data.token) {
-        alert("Login effettuato con successo!");
+        displayFeedback("Login effettuato con successo!", true);
         localStorage.setItem("token", data.token);
         localStorage.setItem("ruolo", data.ruolo);
         localStorage.setItem("cod_utente", data.ID);
@@ -72,10 +90,11 @@ function HeroSection() {
           }
         }
       } else {
-        alert(data.error);
+        displayFeedback(data.error || "Errore durante il login.", false);
       }
     } catch (error) {
       console.error("Error:", error);
+      displayFeedback("Errore durante il login.", false);
     }
   };
 
@@ -103,15 +122,16 @@ function HeroSection() {
       console.log("Risposta server:", data); // 🔍 Debug
 
       if (response.ok) {
-        alert("Ristorante registrato con successo!");
+        displayFeedback("Ristorante registrato con successo!", true);
         localStorage.setItem("cod_ristorante", data.cod_ristorante);
         setFirstLogin(false);
         navigate("/manager");
       } else {
-        alert(data.error || "Errore durante la registrazione.");
+        displayFeedback(data.error || "Errore durante la registrazione.", false);
       }
     } catch (error) {
       console.error("Errore:", error);
+      displayFeedback("Errore durante la registrazione.", false);
     }
   };
 
@@ -119,7 +139,7 @@ function HeroSection() {
     event.preventDefault();
 
     if (regPassword !== confirmPassword) {
-      alert("Le password non coincidono.");
+      displayFeedback("Le password non coincidono.", false);
       return;
     }
 
@@ -139,13 +159,14 @@ function HeroSection() {
       const data = await response.json();
 
       if (response.ok) {
-        alert("Registrazione effettuata con successo!");
+        displayFeedback("Registrazione effettuata con successo!", true);
         updateSignInForm();
       } else {
-        alert(data.error || "Errore durante la registrazione.");
+        displayFeedback(data.error || "Errore durante la registrazione.", false);
       }
     } catch (error) {
       console.error("Errore:", error);
+      displayFeedback("Errore durante la registrazione.", false);
     }
   };
 
@@ -183,6 +204,9 @@ function HeroSection() {
           />
           <button type="submit">Registra Ristorante</button>
         </form>
+        {showFeedback && (
+          <Feedback messaggio={feedbackMessage} positivo={isFeedbackPositive} />
+        )}
       </div>
     );
   }
@@ -218,6 +242,9 @@ function HeroSection() {
             </button>
           </div>
         </form>
+        {showFeedback && (
+          <Feedback messaggio={feedbackMessage} positivo={isFeedbackPositive} />
+        )}
       </div>
     );
   }
@@ -290,6 +317,9 @@ function HeroSection() {
             </button>
           </div>
         </form>
+        {showFeedback && (
+          <Feedback messaggio={feedbackMessage} positivo={isFeedbackPositive} />
+        )}
       </div>
     );
   }
@@ -303,6 +333,9 @@ function HeroSection() {
       <button className={styles.signInBtn} onClick={updateSignInForm}>
         Registrati
       </button>
+      {showFeedback && (
+        <Feedback messaggio={feedbackMessage} positivo={isFeedbackPositive} />
+      )}
     </div>
   );
 }

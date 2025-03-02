@@ -4,7 +4,7 @@ import styles from '../modules/OrderPage.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCartPlus, faChair, faCashRegister } from '@fortawesome/free-solid-svg-icons';
 import OrderSection from "../components/OrderPage/OrderSection";
-import PayementSection from "../components/OrderPage/PaymentSection";
+import PayementSection from "../components/OrderPage/PayementSection";
 import TablesSection from "../components/OrderPage/TablesSection";
 
 function OrderPage() {
