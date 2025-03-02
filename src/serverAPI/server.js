@@ -53,7 +53,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-
 // Rotta di login
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -72,11 +71,11 @@ app.post('/login', async (req, res) => {
                 { id: user.ID, email: user.Email, ruolo: user.Ruolo },
                 'your_jwt_secret',
                 { expiresIn: '1h' }
-                
+
             );
             const firstLogin = user.Cod_ristorante === null;
 
-            res.json({  
+            res.json({
                 token,
                 ruolo: user.Ruolo,
                 cod_ristorante: user.Cod_ristorante,
@@ -92,10 +91,9 @@ app.post('/login', async (req, res) => {
     }
 });
 
-
 //Rotta Notifiche
-app.post('/notifications', async (req,res) => {
-    const{userId} = req.body;
+app.post('/notifications', async (req, res) => {
+    const { userId } = req.body;
     try {
         const notifications = await client.query(
             'SELECT * FROM "Notifiche" WHERE "ID_utente" = $1',
@@ -124,13 +122,13 @@ app.post('/markAsRead', async (req, res) => {
 
 // Rotta per la registrazione del ristorante
 app.post('/register-restaurant', async (req, res) => {
-    const { nome, id_proprietario, citta, indirizzo} = req.body;
+    const { nome, id_proprietario, citta, indirizzo } = req.body;
 
-    if(!nome) {
+    if (!nome) {
         return res.status(400).json({ error: 'Nome ristorante è obbligatorio' });
     }
     try {
-       
+
         const result = await client.query(
             'INSERT INTO "Ristorante" ("Nome", "Citta", "Indirizzo") VALUES ($1, $2,$3) RETURNING "Cod_ristorante"',
             [nome, citta, indirizzo]
@@ -156,7 +154,7 @@ app.post('/alerts', async (req, res) => {
         const beverage = await client.query(
             'SELECT "Nome" FROM "Beverage" WHERE "Quantita" <= "Quantita_critica";'
         );
-        
+
         // Alerts sul tempo di attesa
         //Conversione del datatype Interval in tempo attesa in minuti per poter essere 
         //filtrato successivamente
@@ -259,13 +257,13 @@ app.post('/removeStaff', async (req, res) => {
 
 // Rotta per il menu
 app.post('/menu', async (req, res) => {
-    const {cod_ristorante} = req.body;
+    const { cod_ristorante } = req.body;
     try {
         const menu = await client.query(
             'SELECT * FROM "Menu" WHERE "Cod_ristorante" = $1', 
             [cod_ristorante]
         );
-        res.json(menu.rows); 
+        res.json(menu.rows);
     } catch (error) {
         console.error('Error fetching menu:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -296,7 +294,7 @@ app.put('/menu_update', async (req, res) => {
       console.error("Errore aggiornamento menu:", error);
       res.status(500).json({ error: "Errore del server" });
     }
-  });
+});
 
 
 
@@ -316,9 +314,11 @@ app.post('/orderReport', async (req, res) => {
 
 // Rotta per il report del beverage
 app.post('/beverageReport', async (req, res) => {
+    const { cod_ristorante } = req.body; 
     try {
         const beverageReport = await client.query(
-            'SELECT "Nome", "Quantita", "Quantita_max", "Quantita_critica" FROM "Beverage";'
+            'SELECT "Nome", "Quantita", "Quantita_max", "Quantita_critica" FROM "Beverage" WHERE "Cod_ristorante" = $1;',
+            [cod_ristorante]
         );
         res.json(beverageReport.rows);
     } catch (error) {
@@ -400,7 +400,7 @@ app.post('/orders', async (req, res) => {
 
     try {
         const result = await client.query(
-            'INSERT INTO "Ordine" ("Cod_tavolo", "Totale", "Note_ordine", "Ora", "Completato") VALUES ($1, $2, $3, NOW(), false) RETURNING "Cod_ordine"',
+            'INSERT INTO "Ordine" ("Cod_tavolo", "Totale", "Note_ordine", "Ora") VALUES ($1, $2, $3, NOW()) RETURNING "Cod_ordine"',
             [table, totale, notes]
         );
 
@@ -429,10 +429,11 @@ app.post('/menu_order', async (req, res) => {
     }
 });
 
+
 //Rotta per creare il menu
 app.post('/create_menu', async (req, res) => {
     const { nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, Cod_ristorante } = req.body;
-    
+
     console.log("Dati ricevuti:", req.body); // LOG PER DEBUG
 
     if (!Cod_ristorante || isNaN(Cod_ristorante)) {
@@ -445,12 +446,11 @@ app.post('/create_menu', async (req, res) => {
             [nome, descrizione, allergeni, prezzo, tipo_piatto, tempo_cottura, Disponibile, parseInt(Cod_ristorante)]
         );
         res.json({ message: 'Menu added successfully' });
-    } catch (error) {   
+    } catch (error) {
         console.error('Error adding menu:', error);
-        res.status(500).json({ error: 'Internal server error' });   
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
-
 
 // Rotta per ottenere gli ordini completati
 app.get('/completed_orders', async (req, res) => {
@@ -499,7 +499,7 @@ app.post('/complete_payment', async (req, res) => {
     }
 });
 
-app.post ('/free_table', async (req, res) => {
+app.post('/free_table', async (req, res) => {
     const { tableId } = req.body;
 
     try {

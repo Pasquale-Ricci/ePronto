@@ -2,13 +2,18 @@
     margin-top: 10%;
     margin-left: 10%;
     height: 100%;
-    width: 80%; /* Riduci la larghezza per evitare overflow */
+    width: 80%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-evenly;
-    gap: 20px; /* Aggiunge spazio tra i bottoni */
+    gap: 20px;
+    background-color: rgba(255, 255, 255, 0.698);
+    padding: 30px;
+    padding-bottom: 50px;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .section {
@@ -23,20 +28,20 @@
     color: rgba(174, 25, 25, 0.759);
     margin-top: 20px;
     border: none;
-    border-radius: 15px; /* Bordi più arrotondati */
+    border-radius: 15px;
     background-color: #f0f0f0;
     cursor: pointer;
-    height: 400px; /* Altezza aumentata */
-    width: 400px; /* Larghezza aumentata */
-    font-size: 50px; /* Font più grande */
+    height: 400px;
+    width: 400px;
+    font-size: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Aggiunge un'ombra */
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Effetto hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
 }
 
 .orderBtn:hover {
-    transform: scale(1.05); /* Ingrandisce leggermente il bottone */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Aumenta l'ombra */
+    transform: scale(1.05); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
 }

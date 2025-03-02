@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "../../modules/MenuEditorSection.module.css";
 import MenuSection from "../ManagerPage/MenuSection";
+import Feedback from "../Feedback"; // Importa il componente Feedback
 
 function MenuEditorSection({ changeView }) {
   const [nome, setNome] = useState("");
@@ -11,7 +12,13 @@ function MenuEditorSection({ changeView }) {
   const [tempoCottura, setTempoCottura] = useState("");
   const [disponibile, setDisponibile] = useState(true);
   const [menuUpdated, setMenuUpdated] = useState(false);
-  const [customTipo, setCustomTipo] = useState("false");
+  const [customTipo, setCustomTipo] = useState(false);
+
+  // Stati per il feedback
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isFeedbackPositive, setIsFeedbackPositive] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+
   const tipiPiattoPredefiniti = [
     "Antipasto",
     "Primo",
@@ -29,6 +36,18 @@ function MenuEditorSection({ changeView }) {
       setCustomTipo(false);
       setTipoPiatto(value);
     }
+  };
+
+  // Funzione per mostrare il feedback
+  const displayFeedback = (message, isPositive) => {
+    setFeedbackMessage(message);
+    setIsFeedbackPositive(isPositive);
+    setShowFeedback(true);
+
+    // Nascondi il feedback dopo 4 secondi
+    setTimeout(() => {
+      setShowFeedback(false);
+    }, 4000);
   };
 
   const handleSubmit = async (e) => {
@@ -65,7 +84,8 @@ function MenuEditorSection({ changeView }) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      alert("Piatto creato con successo!");
+      // Mostra feedback di successo
+      displayFeedback("Piatto creato con successo!", true);
 
       // Reset campi
       setNome("");
@@ -80,12 +100,18 @@ function MenuEditorSection({ changeView }) {
       setMenuUpdated((prev) => !prev);
     } catch (error) {
       console.error("Error creating menu item:", error);
-      alert("Errore durante la creazione del piatto.");
+      // Mostra feedback di errore
+      displayFeedback("Errore durante la creazione del piatto.", false);
     }
   };
 
   return (
     <div className={styles.menuEditorContainer}>
+      {/* Mostra il feedback se necessario */}
+      {showFeedback && (
+        <Feedback messaggio={feedbackMessage} positivo={isFeedbackPositive} />
+      )}
+
       <form onSubmit={handleSubmit} className={styles.menuForm}>
         <h2 className={styles.menuFormTitle}>
           Aggiungi un nuovo piatto al menu

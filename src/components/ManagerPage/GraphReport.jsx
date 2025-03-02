@@ -11,35 +11,66 @@ function GraphReport() {
     const [beverageData, setBeverageData] = useState([]);
     const [orderData, setOrderData] = useState([]);
     const [isBarChart, setIsBarChart] = useState(true);
+    const [error, setError] = useState(null);
+
+    // Funzione per convertire il timestamp in formato leggibile
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        const suffix = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12;
+        return `${formattedHours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} ${suffix}`;
+    };
 
     useEffect(() => {
         const fetchBeverageData = async () => {
             try {
+                const cod_ristorante = localStorage.getItem("cod_ristorante");
+                if (!cod_ristorante) {
+                    throw new Error("cod_ristorante not found in localStorage");
+                }
+
                 const response = await fetch('http://localhost:3000/beverageReport', {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ cod_ristorante }),
                 });
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+
                 const data = await response.json();
                 setBeverageData(data);
             } catch (error) {
                 console.error('Error fetching beverage report:', error);
+                setError(error.message);
             }
         };
 
         const fetchOrderData = async () => {
             try {
                 const response = await fetch('http://localhost:3000/orderReport', {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 });
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
+
                 const data = await response.json();
+                console.log('Order Data:', data); // Debug dei dati
                 setOrderData(data);
             } catch (error) {
                 console.error('Error fetching order report:', error);
+                setError(error.message);
             }
         };
 
@@ -47,7 +78,7 @@ function GraphReport() {
         fetchOrderData();
     }, []);
 
-    //Grafico a barre
+    // Grafico a barre
     const barData = {
         labels: beverageData.map(item => item.Nome),
         datasets: [
@@ -75,14 +106,9 @@ function GraphReport() {
         ],
     };
 
-    //Grafico a linee
+    // Grafico a linee
     const lineData = {
-        labels: orderData.map(item => {
-            const currentDate = new Date().toISOString().split('T')[0];
-            const dateTimeString = `${currentDate}T${item.Ora}`;
-            const date = new Date(dateTimeString);
-            return date instanceof Date && !isNaN(date) ? date.toLocaleTimeString() : 'Invalid Date';
-        }),
+        labels: orderData.map(item => formatTimestamp(item.Ora)), // Converti il timestamp in formato leggibile
         datasets: [
             {
                 label: 'Numero di Ordini',
@@ -106,21 +132,25 @@ function GraphReport() {
     return (
         <div className={styles.sectionsContainer}>
             <h2>Reports</h2>
-            <div className={styles.chartContainer}>
-                <div className={styles.iconContainer}>
-                    <FontAwesomeIcon
-                        icon={faChartBar}
-                        className={isBarChart ? styles.activeIcon : styles.inactiveIcon}
-                        onClick={() => setIsBarChart(true)}
-                    />
-                    <FontAwesomeIcon
-                        icon={faChartLine}
-                        className={!isBarChart ? styles.activeIcon : styles.inactiveIcon}
-                        onClick={() => setIsBarChart(false)}
-                    />
+            {error ? (
+                <div className={styles.errorMessage}>Error: {error}</div>
+            ) : (
+                <div className={styles.chartContainer}>
+                    <div className={styles.iconContainer}>
+                        <FontAwesomeIcon
+                            icon={faChartBar}
+                            className={isBarChart ? styles.activeIcon : styles.inactiveIcon}
+                            onClick={() => setIsBarChart(true)}
+                        />
+                        <FontAwesomeIcon
+                            icon={faChartLine}
+                            className={!isBarChart ? styles.activeIcon : styles.inactiveIcon}
+                            onClick={() => setIsBarChart(false)}
+                        />
+                    </div>
+                    {renderChart()}
                 </div>
-                {renderChart()}
-            </div>
+            )}
         </div>
     );
 }

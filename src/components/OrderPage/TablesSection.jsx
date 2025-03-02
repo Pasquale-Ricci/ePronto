@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import styles from "../../modules/TablesSection.module.css";
 import OrderPage from "../../pages/OrderPage";
 
-function TablesSection() {
-  const [view, setView] = useState(true);
+function TablesSection({ onBack }) { // Aggiungi una prop `onBack` per gestire il ritorno
   const [tables, setTables] = useState([]);
 
   // Funzione per recuperare i tavoli
@@ -42,16 +41,15 @@ function TablesSection() {
       console.error("Error seating customers:", error);
     }
   }
-  if (!view) {
-    return <OrderPage />;
-  }
+
   useEffect(() => {
     getTables();
   }, []);
+
   return (
     <>
       <Header />
-      <button className={styles.backBtn} onClick={() => setView(false)}>
+      <button className={styles.backBtn} onClick={onBack}> {/* Usa la prop `onBack` */}
         Indietro
       </button>
       <div className={styles.tablesContainer}>
@@ -75,4 +73,5 @@ function TablesSection() {
     </>
   );
 }
+
 export default TablesSection;

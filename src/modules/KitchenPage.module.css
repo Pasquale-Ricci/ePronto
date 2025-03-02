@@ -38,6 +38,25 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+.pendingOrders::-webkit-scrollbar {
+    height: 8px;
+}
+
+.pendingOrders::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.pendingOrders::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.pendingOrders::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 .orderItem {
@@ -46,6 +65,7 @@
     border-radius: 5px;
     padding: 10px;
     width: 280px;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s ease-in-out;
@@ -117,4 +137,65 @@
     background-color: rgba(196, 196, 196, 0.284);
     padding: 5px;
     border-radius: 5px;
+}
+
+.toggleButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.toggleButton:hover {
+    background-color: #45a049;
+}
+
+.apiSection {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.apiControls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.criterionSelect {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.apiButton {
+    padding: 10px 20px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.apiButton:hover {
+    background-color: #1e88e5;
+}
+
+.apiResult {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    word-wrap: break-word;
 }

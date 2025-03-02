@@ -1,9 +1,9 @@
 .container {
-    background-color: transparent; /* Sfondo trasparente */
+    background-color: transparent;
     padding: 5px;
     z-index: 1005;
-    border-radius: 10px; /* Bordi arrotondati */
-    position: relative; /* Aggiunto per il posizionamento assoluto del contatore */
+    border-radius: 10px;
+    position: relative;
 }
 
 .notificationBtn {
@@ -47,7 +47,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 300px; /* Ridotto per evitare sovrapposizioni */
+    width: 300px;
     max-height: 400px;
     overflow-y: auto;
     z-index: 1000;

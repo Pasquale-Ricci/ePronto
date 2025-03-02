@@ -110,6 +110,7 @@ function StaffSection() {
       <input
         className={styles.newStaff}
         id="newStaffInput"
+        className={styles.newStaffInput}
         value={newStaff}
         onChange={(e) => setNewStaff(e.target.value)}
         type="text"

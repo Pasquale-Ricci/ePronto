@@ -13,12 +13,19 @@ function PayementSection() {
 
     // Funzione per recuperare i tavoli
     async function getTables() {
+        const cod_ristorante = localStorage.getItem('cod_ristorante'); // Recupera il codice del ristorante
+        if (!cod_ristorante) {
+            console.error('Codice ristorante non trovato nel localStorage');
+            return;
+        }
+
         try {
             const response = await fetch('http://localhost:3000/tables', {
-                method: 'GET',
+                method: 'POST', // Usa POST per inviare il corpo della richiesta
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({ cod_ristorante }) // Invia cod_ristorante nel corpo
             });
 
             if (!response.ok) {
@@ -26,7 +33,7 @@ function PayementSection() {
             }
 
             const data = await response.json();
-            setTables(data.sort((a, b) => a.Cod_tavolo - b.Cod_tavolo));
+            setTables(data.sort((a, b) => a.Cod_tavolo - b.Cod_tavolo)); // Ordina i tavoli
         } catch (error) {
             console.error('Error fetching tables:', error);
         }
@@ -162,20 +169,27 @@ function PayementSection() {
                         <p>Nessun ordine completato da pagare</p>
                     ) : (
                         <ul>
-                            {filteredOrders.map((order) => (
-                                <li key={order.Cod_ordine} className={styles.orderItem}>
-                                    <div>
-                                        <p>Ordine #{order.Cod_ordine}</p>
-                                        <p>Totale: €{order.Totale.toFixed(2)}</p>
-                                        <p>Note: {order.Note_ordine}</p>
-                                    </div>
-                                    <div className={styles.discountButtons}>
-                                        <button onClick={() => applyDiscount(order.Cod_ordine, 10)}>Sconto 10%</button>
-                                        <button onClick={() => applyDiscount(order.Cod_ordine, 20)}>Sconto 20%</button>
-                                        <button onClick={() => completePayment(order.Cod_ordine)}><FontAwesomeIcon icon={faCircleCheck} /></button>
-                                    </div>
-                                </li>
-                            ))}
+                            {filteredOrders.map((order) => {
+                                // Assicurati che order.Totale sia un numero
+                                const totale = typeof order.Totale === 'number' ? order.Totale : parseFloat(order.Totale);
+
+                                return (
+                                    <li key={order.Cod_ordine} className={styles.orderItem}>
+                                        <div>
+                                            <p>Ordine #{order.Cod_ordine}</p>
+                                            <p>Totale: €{!isNaN(totale) ? totale.toFixed(2) : '0.00'}</p>
+                                            <p>Note: {order.Note_ordine}</p>
+                                        </div>
+                                        <div className={styles.discountButtons}>
+                                            <button onClick={() => applyDiscount(order.Cod_ordine, 10)}>Sconto 10%</button>
+                                            <button onClick={() => applyDiscount(order.Cod_ordine, 20)}>Sconto 20%</button>
+                                            <button onClick={() => completePayment(order.Cod_ordine)}>
+                                                <FontAwesomeIcon icon={faCircleCheck} />
+                                            </button>
+                                        </div>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     )}
                 </div>
