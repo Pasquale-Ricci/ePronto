@@ -10,13 +10,17 @@ import TablesSection from "../components/OrderPage/TablesSection";
 function OrderPage() {
     const [view, setView] = useState("");
 
+    const handleBack = () => {
+        setView(""); // Torna alla vista principale
+    };
+
     switch (view) {
         case "order":
-            return <OrderSection />;
+            return <OrderSection onBack={handleBack} />;
         case "payment":
-            return <PayementSection />;
+            return <PayementSection onBack={handleBack} />;
         case "tables":
-            return <TablesSection />;
+            return <TablesSection onBack={handleBack} />;
         default:
             return (
                 <>

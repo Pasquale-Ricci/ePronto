@@ -172,12 +172,11 @@ function OrderSection() {
       </>
     );
   } else {
-    // Ordina i piatti per tipo_piatto
+    
     const sortedMenu = [...menu].sort((a, b) =>
       a.Tipo_piatto.localeCompare(b.Tipo_piatto)
     );
-
-    // Crea un array di elementi JSX
+    
     const menuItems = [];
     let currentTipoPiatto = "";
 

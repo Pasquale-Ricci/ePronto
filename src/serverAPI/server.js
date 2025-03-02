@@ -317,7 +317,7 @@ app.post('/orders', async (req, res) => {
 
     try {
         const result = await client.query(
-            'INSERT INTO "Ordine" ("Cod_tavolo", "Totale", "Note_ordine", "Ora", "Completato") VALUES ($1, $2, $3, NOW(), false) RETURNING "Cod_ordine"',
+            'INSERT INTO "Ordine" ("Cod_tavolo", "Totale", "Note_ordine", "Ora") VALUES ($1, $2, $3, NOW()) RETURNING "Cod_ordine"',
             [table, totale, notes]
         );
 
