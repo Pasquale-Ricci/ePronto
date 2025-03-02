@@ -12,22 +12,18 @@
     display: flex;
     flex-direction: column;
 }
-.newStaff {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    font-size: 16px;
-    border: 2px solid  rgb(255, 148, 148);
+.managerBtn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
     border-radius: 5px;
-    background-color: #f8f9fa;
-    color: #333;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    margin-bottom: 10px;
   }
   
-  .newStaff:focus {
-    border-color: rgb(255, 148, 148);
-    box-shadow: 0 0 8px  rgb(255, 148, 148);
-    outline: none;
+  .managerBtn:hover {
+    background-color: #0056b3;
   }
 .backButton {
     position: fixed;

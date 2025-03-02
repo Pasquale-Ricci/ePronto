@@ -5,7 +5,8 @@ import StaffSection from "../components/ManagerPage/StaffSection";
 import MenuSection from "../components/ManagerPage/MenuSection";
 import ReportSection from "../components/ManagerPage/ReportSection";
 import MenuEditorSection from "../components/ManagerPage/MenuEditorSection";
-import ManagerTable from "../components/ManagerPage/ManagerTable"; // Assicurati che il percorso sia corretto
+import ManagerTable from "../components/ManagerPage/ManagerTable";
+import BeverageSection from "../components/ManagerPage/BeverageSection"; // Importa il componente BeverageSection
 import { useState } from "react";
 
 function ManagerPage() {
@@ -51,6 +52,15 @@ function ManagerPage() {
                 Gestisci Tavoli
               </button>
             </div>
+            <div>
+              <h2>Gestisci le bevande</h2>
+              <button
+                className={style.managerBtn}
+                onClick={() => changeView("beverages")}
+              >
+                Gestisci Bevande
+              </button>
+            </div>
           </div>
 
           <div className={style.sectionColumn}>
@@ -66,6 +76,8 @@ function ManagerPage() {
     return <MenuEditorSection changeView={() => changeView("main")} />;
   } else if (view === "tables") {
     return <ManagerTable changeView={() => changeView("main")} />;
+  } else if (view === "beverages") {
+    return <BeverageSection changeView={() => changeView("main")} />; // Visualizza BeverageSection
   }
 }
 

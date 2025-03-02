@@ -1,0 +1,130 @@
+/* Contenitore principale */
+.beverageContainer {
+  padding: 40px 20px 20px; /* Aumentato il padding superiore a 40px */
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 50px auto 0; /* Aggiunto margine superiore di 50px */
+}
+
+/* Header con titolo e bottone indietro */
+.beverageHeader {
+  display: flex;
+  justify-content: space-between; /* Allinea il titolo al centro e il bottone a destra */
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative; /* Necessario per centrare il titolo */
+}
+
+.beverageTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  position: absolute; /* Posiziona il titolo in modo assoluto */
+  left: 50%; /* Centra orizzontalmente */
+  transform: translateX(-50%); /* Centra orizzontalmente */
+  top: 10px; /* Sposta il titolo leggermente più in basso */
+}
+
+.backButton {
+  background-color: #591010;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  margin-left: auto; /* Spinge il bottone a destra */
+  margin-top: 25px; /* Sposta il bottone leggermente più in basso */
+}
+
+.backButton:hover {
+  background-color: #0056b3;
+}
+
+/* Lista delle bevande */
+.beverageList {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Singolo elemento della lista */
+.beverageItem {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: white;
+  transition: box-shadow 0.3s ease;
+}
+
+.beverageItem:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Dettagli della bevanda */
+.beverageItem strong {
+  font-size: 18px;
+  color: #333;
+}
+
+.beverageItem p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.beverageItem span {
+  display: block;
+  margin: 5px 0;
+  color: #777;
+}
+
+/* Bottoni di modifica e salvataggio */
+.beverageSave, .beverageChange {
+  margin-left: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.beverageSave {
+  background-color: #28a745;
+  color: white;
+}
+
+.beverageSave:hover {
+  background-color: #218838;
+}
+
+.beverageChange {
+  background-color: #ffc107;
+  color: black;
+}
+
+.beverageChange:hover {
+  background-color: #e0a800;
+}
+
+/* Input fields */
+.beverageItem input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.beverageItem input[type="date"] {
+  padding: 7px;
+}
+
+.beverageItem input[type="number"] {
+  width: calc(100% - 20px);
+}

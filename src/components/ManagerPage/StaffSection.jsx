@@ -108,7 +108,6 @@ function StaffSection() {
         ))}
       </ul>
       <input
-        className={styles.newStaff}
         id="newStaffInput"
         className={styles.newStaffInput}
         value={newStaff}

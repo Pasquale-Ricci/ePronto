@@ -16,21 +16,29 @@ function OrderSection() {
 
   // Funzione per visualizzare i tavoli disponibili
   async function getTables() {
+    const cod_ristorante = localStorage.getItem("cod_ristorante");
+    if (!cod_ristorante) {
+      console.error("Codice ristorante non trovato nel localStorage");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:3000/tables", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ cod_ristorante }),
       });
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      setTables(await response.json());
+
+      const data = await response.json();
+      setTables(data.sort((a, b) => a.Cod_tavolo - b.Cod_tavolo));
     } catch (error) {
       console.error("Error fetching tables:", error);
-      setFeedbackMessage("Errore nel caricamento dei tavoli");
-      setFeedbackType("errore");
     }
   }
 
@@ -179,7 +187,10 @@ function OrderSection() {
           ))}
         </div>
         {feedbackMessage && (
-          <Feedback messaggio={feedbackMessage} positivo={feedbackType === "successo"} />
+          <Feedback
+            messaggio={feedbackMessage}
+            positivo={feedbackType === "successo"}
+          />
         )}
       </>
     );
@@ -259,7 +270,10 @@ function OrderSection() {
           </button>
         </div>
         {feedbackMessage && (
-          <Feedback messaggio={feedbackMessage} positivo={feedbackType === "successo"} />
+          <Feedback
+            messaggio={feedbackMessage}
+            positivo={feedbackType === "successo"}
+          />
         )}
       </>
     );

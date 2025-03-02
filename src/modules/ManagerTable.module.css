@@ -32,7 +32,7 @@
     gap: 10px;
   }
   
-  button {
+  .managerButton {
     padding: 8px 12px;
     background-color: #007bff;
     color: white;
@@ -41,6 +41,6 @@
     cursor: pointer;
   }
   
-  button:hover {
+  .managerButton:hover {
     background-color: #0056b3;
   }

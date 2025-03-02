@@ -178,9 +178,12 @@ app.post('/alerts', async (req, res) => {
     }
 });
 
+
+  
+
+
 app.post('/staff', async (req, res) => {
     const { cod_ristorante } = req.body;
-
     // Validazione dell'input
     if (!cod_ristorante) {
         return res.status(400).json({ error: 'cod_ristorante è obbligatorio' });
@@ -295,7 +298,56 @@ app.put('/menu_update', async (req, res) => {
       res.status(500).json({ error: "Errore del server" });
     }
 });
+app.post('/beverages', async (req, res) => {
+    const { cod_ristorante } = req.body;
+    try {
+        const beverages = await client.query(
+            `SELECT "Cod_scorta", "Nome", DATE("Scadenza") AS "Scadenza", "Quantita", "Quantita_max", "Quantita_critica"
+             FROM "Beverage" 
+             WHERE "Cod_ristorante" = $1`, 
+            [cod_ristorante]
+        );
+        res.json(beverages.rows);
+    } catch (error) {
+        console.error('Error fetching beverages:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});app.post('/beverages', async (req, res) => {
+    const { cod_ristorante } = req.body;
+    try {
+        const beverages = await client.query(
+            'SELECT * FROM "Beverage" WHERE "Cod_ristorante" = $1', 
+            [cod_ristorante]
+        );
+        res.json(beverages.rows);
+    } catch (error) {
+        console.error('Error fetching beverages:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
+app.put('/beverages_update', async (req, res) => {
+    const { Cod_scorta, Nome, Scadenza, Quantita, Quantita_max, Quantita_critica } = req.body;
+
+    try {
+        const result = await client.query(
+            `UPDATE "Beverage" 
+            SET "Nome" = $1, "Scadenza" = $2, "Quantita" = $3, "Quantita_max" = $4, "Quantita_critica" = $5
+            WHERE "Cod_scorta" = $6 
+            RETURNING *`,
+            [Nome, Scadenza, Quantita, Quantita_max, Quantita_critica, Cod_scorta]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Bevanda non trovata" });
+        }
+
+        res.json({ message: "Bevanda aggiornata con successo", beverage: result.rows[0] });
+    } catch (error) {
+        console.error("Errore aggiornamento bevanda:", error);
+        res.status(500).json({ error: "Errore del server" });
+    }
+});
 
 
 
@@ -312,7 +364,10 @@ app.post('/orderReport', async (req, res) => {
     }
 });
 
+
+
 // Rotta per il report del beverage
+
 app.post('/beverageReport', async (req, res) => {
     const { cod_ristorante } = req.body; 
     try {
@@ -520,7 +575,7 @@ app.get('/kitchen_orders', async (req, res) => {
     try {
         const orders = await client.query(`
            SELECT o."Cod_ordine", o."Totale", o."Note_ordine", o."Cod_tavolo", 
-            TO_CHAR(o."Ora", 'HH24:MI') AS "Ora", 
+            TO_CHAR(o."Ora", 'YYYY-MM-DD"T"HH24:MI') AS "Ora", 
             o."Completato", o."Pagato",
             mo."Cod_menu", mo."Quantita", mo."Pronto", 
             m."Nome", m."Descrizione", m."Allergeni", m."Prezzo", m."Tipo_piatto", m."Tempo_cottura"

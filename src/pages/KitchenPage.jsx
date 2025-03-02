@@ -18,7 +18,7 @@ function KitchenPage() {
   const [showCompletedOrders, setShowCompletedOrders] = useState(false);
   const [apiResult, setApiResult] = useState(null);
   const [selectedCriterion, setSelectedCriterion] = useState("Parallelo"); // Stato per il criterio selezionato
-  const codRistorante = localStorage.getItem('cod_ristorante');
+  const codRistorante = localStorage.getItem("cod_ristorante");
 
   // Funzione per recuperare gli ordini con i piatti associati
   async function getKitchenOrders() {
@@ -36,7 +36,7 @@ function KitchenPage() {
 
       const data = await response.json();
       const groupedOrders = data.reduce((acc, item) => {
-        const order = acc.find(o => o.Cod_ordine === item.Cod_ordine);
+        const order = acc.find((o) => o.Cod_ordine === item.Cod_ordine);
         if (order) {
           order.dishes.push(item);
         } else {
@@ -47,7 +47,7 @@ function KitchenPage() {
             Ora: item.Ora,
             Completato: item.Completato,
             Pagato: item.Pagato,
-            dishes: [item]
+            dishes: [item],
           });
         }
         return acc;
@@ -60,7 +60,7 @@ function KitchenPage() {
 
       return groupedOrders;
     } catch (error) {
-      console.error('Error fetching kitchen orders:', error);
+      console.error("Error fetching kitchen orders:", error);
       return [];
     }
   }
@@ -71,10 +71,10 @@ function KitchenPage() {
       // Aggiorna i dati degli ordini prima di procedere
       await getKitchenOrders();
 
-      const response = await fetch('http://localhost:3001/ordina-piatti', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/ordina-piatti", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ criterio: selectedCriterion }), // Usa il criterio selezionato
       });
@@ -86,20 +86,23 @@ function KitchenPage() {
       const result = await response.json();
       setApiResult(result.risultato); // Memorizza il risultato dell'API
     } catch (error) {
-      console.error('Error calling order API:', error);
+      console.error("Error calling order API:", error);
     }
   }
 
   // Funzione per gestire il completamento di un piatto
   async function toggleDishCompletion(orderId, menuId, completato, dishName) {
     try {
-      const response = await fetch('http://localhost:3000/toggle_dish_completion', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ orderId, menuId, completato })
-      });
+      const response = await fetch(
+        "http://localhost:3000/toggle_dish_completion",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ orderId, menuId, completato }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -109,15 +112,18 @@ function KitchenPage() {
       await notify(orderId, dishMessage);
 
       const updatedOrders = await getKitchenOrders();
-      const order = updatedOrders.find(o => o.Cod_ordine === orderId);
-      if (order && order.dishes.every(dish => dish.Pronto)) {
-        const completeResponse = await fetch('http://localhost:3000/complete_order', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ orderId })
-        });
+      const order = updatedOrders.find((o) => o.Cod_ordine === orderId);
+      if (order && order.dishes.every((dish) => dish.Pronto)) {
+        const completeResponse = await fetch(
+          "http://localhost:3000/complete_order",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ orderId }),
+          }
+        );
 
         if (!completeResponse.ok) {
           throw new Error(`HTTP error! status: ${completeResponse.status}`);
@@ -128,25 +134,25 @@ function KitchenPage() {
         await getKitchenOrders();
       }
     } catch (error) {
-      console.error('Error toggling dish completion:', error);
+      console.error("Error toggling dish completion:", error);
     }
   }
 
   // Funzione per inviare notifiche
   async function notify(orderId, message) {
     try {
-      const response = await fetch('http://localhost:3000/notify', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3000/notify", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ orderId, codRistorante, message })
+        body: JSON.stringify({ orderId, codRistorante, message }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
     } catch (error) {
-      console.error('Error sending notifications:', error);
+      console.error("Error sending notifications:", error);
     }
   }
 
@@ -162,10 +168,12 @@ function KitchenPage() {
       <Header />
       <div className={styles.container}>
         <div className={styles.sidebar}>
-          {pendingOrders.map(order => (
+          {pendingOrders.map((order) => (
             <div
               key={order.Cod_ordine}
-              className={`${styles.tab} ${order.Cod_ordine === selectedOrder ? styles.activeTab : ''}`}
+              className={`${styles.tab} ${
+                order.Cod_ordine === selectedOrder ? styles.activeTab : ""
+              }`}
               onClick={() => setSelectedOrder(order.Cod_ordine)}
             >
               Ordine #{order.Cod_ordine}
@@ -175,15 +183,24 @@ function KitchenPage() {
         <div className={styles.mainContent}>
           <h1>Ordini</h1>
           <div className={styles.pendingOrders}>
-            {pendingOrders.map(order => (
+            {pendingOrders.map((order) => (
               <div
                 key={order.Cod_ordine}
-                className={`${styles.orderItem} ${order.Cod_ordine === selectedOrder ? styles.selectedOrder : ''}`}
+                className={`${styles.orderItem} ${
+                  order.Cod_ordine === selectedOrder ? styles.selectedOrder : ""
+                }`}
               >
                 <div className={styles.orderDetails}>
-                  <p><FontAwesomeIcon icon={faStickyNote} /> {order.Note_ordine}</p>
-                  <p><FontAwesomeIcon icon={faChair} /> {order.Cod_tavolo}</p>
-                  <p><FontAwesomeIcon icon={faClock} /> {new Date(order.Ora).toLocaleTimeString()}</p>
+                  <p>
+                    <FontAwesomeIcon icon={faStickyNote} /> {order.Note_ordine}
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faChair} /> {order.Cod_tavolo}
+                  </p>
+                  <p>
+                    <FontAwesomeIcon icon={faClock} />{" "}
+                    {new Date(order.Ora).toLocaleTimeString()}
+                  </p>
                   <ul>
                     {order.dishes.map((dish) => (
                       <li key={dish.Cod_menu} className={styles.dishItem}>
@@ -192,10 +209,23 @@ function KitchenPage() {
                           <p>Quantità: {dish.Quantita}</p>
                         </div>
                         <button
-                          className={`${styles.dishBtn} ${dish.Pronto ? styles.dishBtnCompleted : ''}`}
-                          onClick={() => toggleDishCompletion(order.Cod_ordine, dish.Cod_menu, !dish.Pronto, dish.Nome)}
+                          className={`${styles.dishBtn} ${
+                            dish.Pronto ? styles.dishBtnCompleted : ""
+                          }`}
+                          onClick={() =>
+                            toggleDishCompletion(
+                              order.Cod_ordine,
+                              dish.Cod_menu,
+                              !dish.Pronto,
+                              dish.Nome
+                            )
+                          }
                         >
-                          {dish.Pronto ? 'Completato' : <FontAwesomeIcon icon={faCircleCheck} />}
+                          {dish.Pronto ? (
+                            "Completato"
+                          ) : (
+                            <FontAwesomeIcon icon={faCircleCheck} />
+                          )}
                         </button>
                       </li>
                     ))}
@@ -211,7 +241,9 @@ function KitchenPage() {
             onClick={() => setShowCompletedOrders(!showCompletedOrders)}
           >
             <FontAwesomeIcon icon={showCompletedOrders ? faEyeSlash : faEye} />{" "}
-            {showCompletedOrders ? "Nascondi ordini completati" : "Mostra ordini completati"}
+            {showCompletedOrders
+              ? "Nascondi ordini completati"
+              : "Mostra ordini completati"}
           </button>
 
           {/* Sezione ordini completati */}
@@ -219,13 +251,26 @@ function KitchenPage() {
             <>
               <h2>Ordini Completati</h2>
               <div className={styles.completedOrders}>
-                {completedOrders.map(order => (
-                  <div key={order.Cod_ordine} className={styles.completedOrderItem}>
+                {completedOrders.map((order) => (
+                  <div
+                    key={order.Cod_ordine}
+                    className={styles.completedOrderItem}
+                  >
                     <div className={styles.orderDetails}>
-                      <p className={styles.orderNumber}>Ordine #{order.Cod_ordine}</p>
-                      <p><FontAwesomeIcon icon={faStickyNote} /> {order.Note_ordine}</p>
-                      <p><FontAwesomeIcon icon={faChair} /> {order.Cod_tavolo}</p>
-                      <p><FontAwesomeIcon icon={faClock} /> {new Date(order.Ora).toLocaleTimeString()}</p>
+                      <p className={styles.orderNumber}>
+                        Ordine #{order.Cod_ordine}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon icon={faStickyNote} />{" "}
+                        {order.Note_ordine}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon icon={faChair} /> {order.Cod_tavolo}
+                      </p>
+                      <p>
+                        <FontAwesomeIcon icon={faClock} />{" "}
+                        {new Date(order.Ora).toLocaleTimeString()}
+                      </p>
                       <ul>
                         {order.dishes.map((dish) => (
                           <li key={dish.Cod_menu} className={styles.dishItem}>
@@ -256,10 +301,7 @@ function KitchenPage() {
                 <option value="Parallelo">Parallelo</option>
                 <option value="Graduale">Graduale</option>
               </select>
-              <button
-                className={styles.apiButton}
-                onClick={callOrderApi}
-              >
+              <button className={styles.apiButton} onClick={callOrderApi}>
                 <FontAwesomeIcon icon={faMagic} /> Ottimizza ordini
               </button>
             </div>

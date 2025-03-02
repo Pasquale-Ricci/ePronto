@@ -110,7 +110,9 @@ function ManagerTable({ changeView }) {
           onChange={(e) => setNewTable({ posti: e.target.value })}
           placeholder="Numero Posti"
         />
-        <button onClick={addTable}>Aggiungi Tavolo</button>
+        <button className={style.managerButton} onClick={addTable}>
+          Aggiungi Tavolo
+        </button>
       </div>
     </div>
   );
