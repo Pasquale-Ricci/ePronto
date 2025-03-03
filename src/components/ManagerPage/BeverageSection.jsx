@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
-import styles from "../../modules/BeverageSection.module.css"; // Importa il modulo CSS
+import styles from "../../modules/BeverageSection.module.css";
+import BeverageEditorSection from "./BeverageEditorSection";
 
 function BeverageSection({ changeView }) {
   const [beverages, setBeverages] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({});
+  const [view, setView] = useState("list");
 
-  // Funzione per formattare la data
   function formatDate(dateString) {
     const date = new Date(dateString);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // I mesi partono da 0
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   }
@@ -39,8 +40,6 @@ function BeverageSection({ changeView }) {
     }
   }
 
-
-
   async function updateBeverage() {
     try {
       const response = await fetch("http://localhost:3000/beverages_update", {
@@ -63,82 +62,42 @@ function BeverageSection({ changeView }) {
     }
   }
 
+  async function addBeverage(newBeverage) {
+    try {
+      const response = await fetch("http://localhost:3000/beverages_add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...newBeverage,
+          Cod_ristorante: localStorage.getItem("cod_ristorante"),
+        }),
+      });
 
-  //Viene richiesta la lista del beverage al render del componente
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      fetchBeverages();
+      setView("list");
+    } catch (error) {
+      console.error("Error adding beverage:", error);
+    }
+  }
+
   useEffect(() => {
     fetchBeverages();
   }, []);
 
-  //Nel render della lista viene controllato se si sta modificando l'elemento del beverage
-  //Quindi se il bottone modifica e stato premuto viene fornito il JSX seguente
-  const beverageItems = beverages.map((beverage, i) => (
-    <li key={i} className={styles.beverageItem}>
-      {editingItem === beverage.Cod_scorta ? (
-        <div>
-          <input
-            type="text"
-            value={formData.Nome || ""}
-            onChange={(e) => setFormData({ ...formData, Nome: e.target.value })}
-          />
-          <input
-            type="date"
-            value={formData.Scadenza || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, Scadenza: e.target.value })
-            }
-          />
-          <input
-            type="number"
-            value={formData.Quantita || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, Quantita: e.target.value })
-            }
-          />
-          <input
-            type="number"
-            value={formData.Quantita_max || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, Quantita_max: e.target.value })
-            }
-          />
-          <input
-            type="number"
-            value={formData.Quantita_critica || ""}
-            onChange={(e) =>
-              setFormData({ ...formData, Quantita_critica: e.target.value })
-            }
-          />
-          <button
-            className={styles.beverageSave}
-            onClick={() => setEditingItem(null)}
-          >
-            Annulla
-          </button>
-          <button className={styles.beverageSave} onClick={updateBeverage}>
-            Salva
-          </button>
-        </div>
-      ) : (
-        <div>
-          <strong>{beverage.Nome}</strong>
-          <p>Scadenza: {formatDate(beverage.Scadenza)}</p>{" "}
-          {/* Formattazione della data*/}
-          <span>Quantità: {beverage.Quantita}</span>
-          <span>Quantità massima: {beverage.Quantita_max}</span>
-          <span>Quantità critica: {beverage.Quantita_critica}</span>
-          <button
-            className={styles.beverageChange}
-            onClick={() => {
-              setEditingItem(beverage.Cod_scorta);
-              setFormData(beverage);
-            }}
-          >
-            Modifica
-          </button>
-        </div>
-      )}
-    </li>
-  ));
+  if (view === "add") {
+    return (
+      <BeverageEditorSection
+        changeView={() => setView("list")}
+        onSave={addBeverage}
+      />
+    );
+  }
 
   return (
     <div className={styles.beverageContainer}>
@@ -147,8 +106,87 @@ function BeverageSection({ changeView }) {
         <button className={styles.backButton} onClick={changeView}>
           Indietro
         </button>
+        <button className={styles.addButton} onClick={() => setView("add")}>
+          Aggiungi Bevanda
+        </button>
       </div>
-      <ul className={styles.beverageList}>{beverageItems}</ul>
+      <ul className={styles.beverageList}>
+        {beverages.map((beverage, i) => (
+          <li key={i} className={styles.beverageItem}>
+            {editingItem === beverage.Cod_scorta ? (
+              <div>
+                <input
+                  type="text"
+                  value={formData.Nome || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, Nome: e.target.value })
+                  }
+                />
+                <input
+                  type="date"
+                  value={formData.Scadenza || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, Scadenza: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  value={formData.Quantita || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, Quantita: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  value={formData.Quantita_max || ""}
+                  onChange={(e) =>
+                    setFormData({ ...formData, Quantita_max: e.target.value })
+                  }
+                />
+                <input
+                  type="number"
+                  value={formData.Quantita_critica || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      Quantita_critica: e.target.value,
+                    })
+                  }
+                />
+                <button
+                  className={styles.beverageSave}
+                  onClick={() => setEditingItem(null)}
+                >
+                  Annulla
+                </button>
+                <button
+                  className={styles.beverageSave}
+                  onClick={updateBeverage}
+                >
+                  Salva
+                </button>
+              </div>
+            ) : (
+              <div>
+                <strong>{beverage.Nome}</strong>
+                <p>Scadenza: {formatDate(beverage.Scadenza)}</p>
+                <span>Quantità: {beverage.Quantita}</span>
+                <span>Quantità massima: {beverage.Quantita_max}</span>
+                <span>Quantità critica: {beverage.Quantita_critica}</span>
+                <button
+                  className={styles.beverageChange}
+                  onClick={() => {
+                    setEditingItem(beverage.Cod_scorta);
+                    setFormData(beverage);
+                  }}
+                >
+                  Modifica
+                </button>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

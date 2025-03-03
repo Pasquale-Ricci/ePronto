@@ -302,28 +302,28 @@ app.post('/beverages', async (req, res) => {
 });
 
 //Rotta per aggiornare il Beverage
-app.put('/beverages_update', async (req, res) => {
-    const { Cod_scorta, Nome, Scadenza, Quantita, Quantita_max, Quantita_critica } = req.body;
+app.post('/beverages_add', async (req, res) => {
+    const { Nome, Scadenza, Quantita, Quantita_max, Quantita_critica, Cod_ristorante } = req.body;
+
+    if (!Nome || !Scadenza || !Quantita || !Quantita_max || !Quantita_critica || !Cod_ristorante) {
+        return res.status(400).json({ error: "Tutti i campi sono obbligatori" });
+    }
 
     try {
         const result = await client.query(
-            `UPDATE "Beverage" 
-            SET "Nome" = $1, "Scadenza" = $2, "Quantita" = $3, "Quantita_max" = $4, "Quantita_critica" = $5
-            WHERE "Cod_scorta" = $6 
-            RETURNING *`,
-            [Nome, Scadenza, Quantita, Quantita_max, Quantita_critica, Cod_scorta]
+            `INSERT INTO "Beverage" ("Nome", "Scadenza", "Quantita", "Quantita_max", "Quantita_critica", "Cod_ristorante")
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+            [Nome, Scadenza, Quantita, Quantita_max, Quantita_critica, Cod_ristorante]
         );
 
-        if (result.rowCount === 0) {
-            return res.status(404).json({ error: "Bevanda non trovata" });
-        }
-
-        res.json({ message: "Bevanda aggiornata con successo", beverage: result.rows[0] });
+        res.json({ message: "Bevanda aggiunta con successo", beverage: result.rows[0] });
     } catch (error) {
-        console.error("Errore aggiornamento bevanda:", error);
-        res.status(500).json({ error: "Errore del server" });
+        console.error("Errore aggiunta bevanda:", error);
+        res.status(500).json({ error: "Errore del server", details: error.message });
     }
 });
+
+  
 
 // Rotta per il report degli ordini, usato dalla GraphSection
 app.post('/orderReport', async (req, res) => {

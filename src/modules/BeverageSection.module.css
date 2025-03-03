@@ -41,7 +41,21 @@
 .backButton:hover {
   background-color: #0056b3;
 }
-
+  .addButton {
+    background-color: #591010;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    margin-left: 1  0px;
+    margin-top: 25px;
+  }
+.addkButton:hover {
+  background-color: #0056b3;
+}
 .beverageList {
   list-style-type: none;
   padding: 0;
