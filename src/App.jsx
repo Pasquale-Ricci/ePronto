@@ -37,7 +37,7 @@ function App() {
                 />
                 <FeatureSection
                   title="Funzionalità Intuitive"
-                  description="Menu digitale con QR code, gestione delle comande e report giornalieri. Un sistema semplice per monitorare ordini, scorte e preferenze dei clienti."
+                  description="Intelligenza artificiale per migliorare lo schedulazione delle ordinazioni, gestione delle comande e report giornalieri. Un sistema semplice per monitorare ordini, scorte e preferenze dei clienti."
                   img={feature3}
                 />
               </div>
