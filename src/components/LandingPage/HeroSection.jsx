@@ -2,7 +2,7 @@ import styles from "../../modules/HeroSection.module.css";
 import logo from "../../assets/logoWeb.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Feedback from '../Feedback';
+import Feedback from "../Feedback";
 
 function HeroSection() {
   const [loginBtn, setLoginBtn] = useState(false);
@@ -36,7 +36,6 @@ function HeroSection() {
     setIsFeedbackPositive(isPositive);
     setShowFeedback(true);
 
-    // Grazie al timer il feedback viene nascosto dopo 4 secondi (l'unita di misura sono i millisecondi)
     setTimeout(() => {
       setShowFeedback(false);
     }, 4000);
@@ -77,16 +76,43 @@ function HeroSection() {
         localStorage.setItem("ruolo", data.ruolo);
         localStorage.setItem("cod_utente", data.ID);
 
+        // Se è il primo login e il ruolo è "proprietario", gestisci il primo login
         if (data.firstLogin && data.ruolo === "proprietario") {
           setFirstLogin(true);
         } else {
-          localStorage.setItem("cod_ristorante", data.cod_ristorante);
-          if (data.ruolo === "Cameriere") {
-            navigate("/OrderPage");
-          } else if (data.ruolo === "Chef") {
-            navigate("/kitchenpage");
-          } else if (data.ruolo === "proprietario") {
+          // Salva il codice ristorante se presente
+          if (data.cod_ristorante) {
+            localStorage.setItem("cod_ristorante", data.cod_ristorante);
+          }
+
+          // Navigazione basata sul ruolo e sul codice ristorante
+          if (data.ruolo === "proprietario") {
             navigate("/manager");
+          } else if (data.ruolo === "Cameriere") {
+            if (data.cod_ristorante) {
+              navigate("/OrderPage");
+            } else {
+              displayFeedback(
+                "Non sei associato a nessun ristorante. Contatta l'amministratore.",
+                false
+              );
+              navigate("/DipendentePage");
+            }
+          } else if (data.ruolo === "Chef") {
+            if (data.cod_ristorante) {
+              navigate("/kitchenpage");
+            } else {
+              displayFeedback(
+                "Non sei associato a nessun ristorante. Contatta l'amministratore.",
+                false
+              );
+              navigate("/DipendentePage");
+            }
+          } else {
+            displayFeedback(
+              "Ruolo non riconosciuto o codice ristorante mancante.",
+              false
+            );
           }
         }
       } else {
@@ -126,7 +152,10 @@ function HeroSection() {
         setFirstLogin(false);
         navigate("/manager");
       } else {
-        displayFeedback(data.error || "Errore durante la registrazione.", false);
+        displayFeedback(
+          data.error || "Errore durante la registrazione.",
+          false
+        );
       }
     } catch (error) {
       console.error("Errore:", error);
@@ -161,7 +190,10 @@ function HeroSection() {
         displayFeedback("Registrazione effettuata con successo!", true);
         updateSignInForm();
       } else {
-        displayFeedback(data.error || "Errore durante la registrazione.", false);
+        displayFeedback(
+          data.error || "Errore durante la registrazione.",
+          false
+        );
       }
     } catch (error) {
       console.error("Errore:", error);
@@ -169,7 +201,7 @@ function HeroSection() {
     }
   };
 
-  //Se il proprietario effettua il primo login allora viene richiesto di registrare il ristorante
+  // Se il proprietario effettua il primo login, mostra il form di registrazione del ristorante
   if (firstLogin) {
     return (
       <div className={styles.heroSection}>
@@ -211,6 +243,7 @@ function HeroSection() {
     );
   }
 
+  // Mostra il form di login
   if (loginBtn) {
     return (
       <div className={styles.heroSection}>
@@ -249,25 +282,25 @@ function HeroSection() {
     );
   }
 
+  // Mostra il form di registrazione
   if (signInBtn) {
     return (
       <div className={styles.heroSection}>
         <form onSubmit={handleRegistration}>
           <input
-            type="nome"
+            type="text"
             placeholder="Nome"
             value={nome}
             onChange={(e) => setNome(e.target.value)}
             required
           />
           <input
-            type="cognome"
+            type="text"
             placeholder="Cognome"
             value={cognome}
             onChange={(e) => setCognome(e.target.value)}
             required
           />
-
           <input
             type="email"
             placeholder="Email"
@@ -295,18 +328,10 @@ function HeroSection() {
             onChange={(e) => setRole(e.target.value)}
             required
           >
-            <option className={styles.role} value="">
-              Seleziona il ruolo
-            </option>
-            <option className={styles.role} value="Chef">
-              Chef
-            </option>
-            <option className={styles.role} value="Cameriere">
-              Cameriere
-            </option>
-            <option className={styles.role} value="proprietario">
-              Proprietario
-            </option>
+            <option value="">Seleziona il ruolo</option>
+            <option value="Chef">Chef</option>
+            <option value="Cameriere">Cameriere</option>
+            <option value="proprietario">Proprietario</option>
           </select>
           <div className={styles.formButtons}>
             <button className={styles.signInBtn} type="submit">
@@ -324,6 +349,7 @@ function HeroSection() {
     );
   }
 
+  // Mostra la schermata iniziale con i pulsanti di accesso e registrazione
   return (
     <div className={styles.heroSection}>
       <img className={styles.heroImage} src={logo} alt="logo" />

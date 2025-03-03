@@ -153,7 +153,7 @@ app.post('/alerts', async (req, res) => {
     try {
         // Alerts sul beverage
         const beverage = await client.query(
-            'SELECT "Nome" FROM "Beverage" WHERE "Quantita" <= "Quantita_critica" AND "Cod_ristorante" = $1;',
+            'SELECT * FROM "Beverage" WHERE "Quantita" <= "Quantita_critica" AND "Cod_ristorante" = $1;',
             [cod_ristorante]
         );
         const alerts = {
@@ -283,6 +283,30 @@ app.put('/menu_update', async (req, res) => {
     } catch (error) {
       console.error("Errore aggiornamento menu:", error);
       res.status(500).json({ error: "Errore del server" });
+    }
+});
+
+app.delete('/menu_delete', async (req, res) => {
+    const { cod_menu } = req.body; 
+
+    if (!cod_menu) {
+        return res.status(400).json({ error: "Il campo 'cod_menu' è obbligatorio" });
+    }
+
+    try {
+        const result = await client.query(
+            `DELETE FROM "Menu" WHERE "Cod_menu" = $1 RETURNING *`,
+            [cod_menu]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Elemento del menu non trovato" });
+        }
+
+        res.json({ message: "Menu eliminato con successo", menu: result.rows[0] });
+    } catch (error) {
+        console.error("Errore eliminazione menu:", error);
+        res.status(500).json({ error: "Errore del server" });
     }
 });
 

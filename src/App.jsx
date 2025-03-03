@@ -12,8 +12,7 @@ import TablesSection from "./components/OrderPage/TablesSection.jsx";
 import feature1 from "./assets/PiattoFeature2.jpg";
 import feature2 from "./assets/StaffFeature2.png";
 import feature3 from "./assets/MenuFeature3.png";
-
-//In questa pagina viene gestito l'inizio della pagina e il routing tramite il modulo react-router
+import DipendentePage from "./pages/DipendentePage.jsx";
 
 function App() {
   return (
@@ -26,11 +25,11 @@ function App() {
             <>
               <HeroSection />
               <div id="featureImgs">
-              <FeatureSection
-               title="Gestione Ristorante"
-                description="èPronto aiuta a organizzare il lavoro nel ristorante, dalla presa delle ordinazioni fino gestione del magazzino. Un supporto pratico per migliorare il servizio."
-                img={feature1}
-/>
+                <FeatureSection
+                  title="Gestione Ristorante"
+                  description="èPronto aiuta a organizzare il lavoro nel ristorante, dalla presa delle ordinazioni fino gestione del magazzino. Un supporto pratico per migliorare il servizio."
+                  img={feature1}
+                />
                 <FeatureSection
                   title="Strumento per lo Staff"
                   description="Ogni membro dello staff ha accesso alle informazioni utili per il proprio ruolo: sala, cucina e gestione. Notifiche e aggiornamenti in tempo reale rendono il lavoro più fluido."
@@ -41,7 +40,6 @@ function App() {
                   description="Menu digitale con QR code, gestione delle comande e report giornalieri. Un sistema semplice per monitorare ordini, scorte e preferenze dei clienti."
                   img={feature3}
                 />
-
               </div>
               <Footer />
             </>
@@ -54,6 +52,7 @@ function App() {
           <Route path="payment" element={<PayementSection />} />
           <Route path="tables" element={<TablesSection />} />
         </Route>
+        <Route path="/DipendentePage" element={<DipendentePage />} />
         <Route path="*" element={<h1>404 Not Found</h1>} />
       </Routes>
     </>

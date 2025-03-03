@@ -17,18 +17,36 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
 }
 
+.menuItem{
+  display: flex;
+  flex-wrap: nowrap;
+}
 .menuContainer {
   background-color: #ffffff;
   max-height: 500px; 
   padding: 20px;
-  width: 600px;
+  width: 650px;
   height: auto; 
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   color: #000000; 
   overflow-y: auto; 
 }
+.menuDelete {
+  background-color: #591010;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  max-width: 100px;
+  max-height: 100px;
+}
 
+.menuDelete:hover {
+  background-color: #591010;
+}
 .menuList {
   list-style-type: none; 
   padding: 0;
@@ -188,6 +206,9 @@
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
   display: inline-block;
   transition: background-color 0.3s ease, transform 0.2s ease;
+  max-width: 80px;
+  max-height: 70px;
+
 }
 
 .menuSave{

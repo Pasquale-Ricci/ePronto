@@ -1,0 +1,100 @@
+
+.container {
+    max-width: 800px;
+    margin-top: 350px;
+    margin-left: 800px;
+    transform: translate(-50%, -50%); 
+    max-width: 500px; 
+    padding: 15px; 
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease-in-out;
+}
+.loginButton {
+    padding: 10px 20px;
+    background-color: #dc3545; 
+    color: white;
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+  }
+  
+  .loginButton:hover {
+    background-color: #dc3545; 
+  }
+.container:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    color: #dc3545;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+p {
+    font-size: 18px;
+    line-height: 1.8;
+    text-align: center;
+    color: #444;
+    margin-bottom: 15px;
+}
+
+.pre {
+    background-color: #f4f4f4;
+    border-left: 5px solid #dc3545;
+    padding: 18px;
+    overflow-x: auto;
+    font-size: 16px;
+    color: #333;
+    border-radius: 8px;
+    font-family: 'Courier New', Courier, monospace;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 28px;
+    }
+    
+    p {
+        font-size: 16px;
+    }
+    
+    pre {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 26px;
+    }
+    
+    p {
+        font-size: 15px;
+    }
+    
+    pre {
+        font-size: 13px;
+        padding: 12px;
+    }
+}

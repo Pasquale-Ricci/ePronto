@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
-import styles from "../../modules/MenuSection.module.css"; // Importa il modulo CSS
-
+import React, { useState, useEffect } from "react";
+import styles from "../../modules/MenuSection.module.css";
 function MenuSection() {
   const [menu, setMenu] = useState([]);
   const [editingItem, setEditingItem] = useState(null);
@@ -14,7 +13,7 @@ function MenuSection() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cod_ristorante: localStorage.getItem("cod_ristorante")
+          cod_ristorante: localStorage.getItem("cod_ristorante"),
         }),
       });
 
@@ -29,7 +28,6 @@ function MenuSection() {
       setMenu([]);
     }
   }
-
 
   async function updateMenuItem() {
     try {
@@ -53,11 +51,29 @@ function MenuSection() {
     }
   }
 
+  async function deleteMenuItem(cod_menu) {
+    try {
+      const response = await fetch("http://localhost:3000/menu_delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cod_menu }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      fetchMenu();
+    } catch (error) {
+      console.error("Error deleting menu item:", error);
+    }
+  }
 
   useEffect(() => {
     fetchMenu();
   }, []);
-
 
   const sortedMenu = [...menu].sort((a, b) =>
     a.Tipo_piatto.localeCompare(b.Tipo_piatto)
@@ -66,7 +82,6 @@ function MenuSection() {
   const menuItems = [];
   let currentTipoPiatto = "";
 
-  
   for (let i = 0; i < sortedMenu.length; i++) {
     const piatto = sortedMenu[i];
     if (piatto.Tipo_piatto !== currentTipoPiatto) {
@@ -145,7 +160,7 @@ function MenuSection() {
             </button>
           </div>
         ) : (
-          <div>
+          <div className={styles.dishContainer}>
             <strong>{piatto.Nome}</strong>
             <p>{piatto.Descrizione}</p>
             <span>
@@ -169,6 +184,12 @@ function MenuSection() {
               }}
             >
               Modifica
+            </button>
+            <button
+              className={styles.menuDelete}
+              onClick={() => deleteMenuItem(piatto.Cod_menu)}
+            >
+              Rimuovi
             </button>
           </div>
         )}

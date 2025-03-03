@@ -8,7 +8,6 @@ function Header() {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Controlla se l'utente è loggato al caricamento del componente
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -33,7 +32,9 @@ function Header() {
       {isLoggedIn ? (
         // Header per utenti loggati
         <div className={styles.headerLoggedIn}>
-          <button className={styles.logoutBtn} onClick={handleLogout}>Logout</button>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            Logout
+          </button>
           <Notification />
         </div>
       ) : (

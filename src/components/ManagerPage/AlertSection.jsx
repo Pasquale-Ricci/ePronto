@@ -3,7 +3,6 @@ import styles from "../../modules/AlertSection.module.css";
 function AlertSection() {
   const [alerts, setAlerts] = useState(null);
 
-
   //Funzione per ottenere la lista degli alert
   async function fetchAlerts() {
     try {
@@ -28,7 +27,6 @@ function AlertSection() {
     }
   }
 
-
   //Quando il componente viene caricato vengono richiesti gli alert
   useEffect(() => {
     async function getAlerts() {
@@ -39,8 +37,6 @@ function AlertSection() {
     getAlerts();
   }, []);
 
-
-  
   if (!alerts) {
     return (
       <div className={styles.alertsContainer}>
@@ -60,7 +56,7 @@ function AlertSection() {
         <ul className={styles.alertList}>
           {alerts.beverage.map((item, index) => (
             <li key={index} className={styles.alertItem}>
-              {item.Nome}
+              Hai {item.Quantita} elementi di {item.Nome}
             </li>
           ))}
         </ul>
